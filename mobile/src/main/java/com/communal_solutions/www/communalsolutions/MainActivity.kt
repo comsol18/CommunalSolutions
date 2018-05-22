@@ -31,7 +31,9 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.SignInButton
 import com.google.android.gms.common.api.ApiException
+import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.Task
+import com.google.firebase.auth.*
 
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -44,6 +46,7 @@ class MainActivity : AppCompatActivity(), LoaderCallbacks<Cursor>, View.OnClickL
      */
     private var mGoogleSignInClient: GoogleSignInClient? = null
     private var mAuthTask: UserLoginTask? = null
+    private var mAuth: FirebaseAuth? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -69,6 +72,7 @@ class MainActivity : AppCompatActivity(), LoaderCallbacks<Cursor>, View.OnClickL
         // Configure sign-in to request the user's ID, email address, and basic
         // profile. ID and basic profile are included in DEFAULT_SIGN_IN.
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail()
                 .build()
         // [END configure_signin]
@@ -84,6 +88,8 @@ class MainActivity : AppCompatActivity(), LoaderCallbacks<Cursor>, View.OnClickL
         signInButton.setSize(SignInButton.SIZE_STANDARD)
         signInButton.setColorScheme(SignInButton.COLOR_LIGHT)
         // [END customize_button]
+
+        mAuth = FirebaseAuth.getInstance()
     }
 
     public override fun onStart() {
@@ -92,8 +98,10 @@ class MainActivity : AppCompatActivity(), LoaderCallbacks<Cursor>, View.OnClickL
         // [START on_start_sign_in]
         // Check for existing Google Sign In account, if the user is already signed in
         // the GoogleSignInAccount will be non-null.
-        val account = GoogleSignIn.getLastSignedInAccount(this)
-        updateUI(account)
+        //val account = GoogleSignIn.getLastSignedInAccount(this)
+        //updateUI(account)
+        val currentUser: FirebaseUser? = mAuth!!.getCurrentUser()
+        updateUI(currentUser)
         // [END on_start_sign_in]
     }
 
@@ -117,20 +125,46 @@ class MainActivity : AppCompatActivity(), LoaderCallbacks<Cursor>, View.OnClickL
             val account = completedTask.getResult<ApiException>(ApiException::class.java)
 
             // Signed in successfully, show authenticated UI.
-            updateUI(account)
+            //updateUI(account)
+            firebaseAuthWithGoogle(account)
+            val homeIntent: Intent = Intent(this, HomeActivity::class.java)
+            startActivity(homeIntent)
         } catch (e: ApiException) {
             // The ApiException status code indicates the detailed failure reason.
             // Please refer to the GoogleSignInStatusCodes class reference for more information.
             Log.w(TAG, "signInResult:failed code=" + e.statusCode)
-            updateUI(null)
+            //updateUI(null)
         }
 
     }
     // [END handleSignInResult]
 
+    private fun firebaseAuthWithGoogle( acct: GoogleSignInAccount ) {
+        Log.d(TAG, "firebaseAuthWithGoogle:" + acct.getId())
+
+        val credential: AuthCredential = GoogleAuthProvider.getCredential(acct.getIdToken(), null)
+        mAuth!!.signInWithCredential(credential)
+                .addOnCompleteListener(this, OnCompleteListener<AuthResult>() {
+                    @Override
+                    fun onComplete(task: Task<AuthResult> ) {
+                        if (task.isSuccessful()) {
+                            // Sign in success, update UI with the signed-in user's information
+                            Log.d(TAG, "signInWithCredential:success")
+                            val user: FirebaseUser? = mAuth!!.getCurrentUser()
+                            updateUI(user)
+                        } else {
+                            // If sign in fails, display a message to the user.
+                            Log.w(TAG, "signInWithCredential:failure", task.getException())
+                            //Snackbar.make((R.id.main_layout), "Authentication Failed.", Snackbar.LENGTH_SHORT).show();
+                            updateUI(null)
+                        }
+                    }
+                })
+    }
+
     // [START signIn]
     private fun signIn() {
-        val signInIntent = mGoogleSignInClient!!.signInIntent
+        val signInIntent: Intent = mGoogleSignInClient!!.signInIntent
         startActivityForResult(signInIntent, RC_SIGN_IN)
     }
     // [END signIn]
@@ -157,12 +191,13 @@ class MainActivity : AppCompatActivity(), LoaderCallbacks<Cursor>, View.OnClickL
     }
     // [END revokeAccess]
 
-    private fun updateUI(account: GoogleSignInAccount?) {
+    private fun updateUI(account: FirebaseUser?) {
         if (account != null) {
-            findViewById<View>(R.id.sign_in_button).visibility = View.GONE
+            //findViewById<View>(R.id.sign_in_button).visibility = View.GONE
             //findViewById<View>(R.id.sign_out_and_disconnect).visibility = View.VISIBLE
+
         } else {
-            findViewById<View>(R.id.sign_in_button).visibility = View.VISIBLE
+            //findViewById<View>(R.id.sign_in_button).visibility = View.VISIBLE
             //findViewById<View>(R.id.sign_out_and_disconnect).visibility = View.GONE
         }
     }
@@ -284,34 +319,27 @@ class MainActivity : AppCompatActivity(), LoaderCallbacks<Cursor>, View.OnClickL
         // On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
         // for very easy animations. If available, use these APIs to fade-in
         // the progress spinner.
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
-            val shortAnimTime = resources.getInteger(android.R.integer.config_shortAnimTime).toLong()
+        val shortAnimTime = resources.getInteger(android.R.integer.config_shortAnimTime).toLong()
 
-            login_form.visibility = if (show) View.GONE else View.VISIBLE
-            login_form.animate()
-                    .setDuration(shortAnimTime)
-                    .alpha((if (show) 0 else 1).toFloat())
-                    .setListener(object : AnimatorListenerAdapter() {
-                        override fun onAnimationEnd(animation: Animator) {
-                            login_form.visibility = if (show) View.GONE else View.VISIBLE
-                        }
-                    })
+        login_form.visibility = if (show) View.GONE else View.VISIBLE
+        login_form.animate()
+                .setDuration(shortAnimTime)
+                .alpha((if (show) 0 else 1).toFloat())
+                .setListener(object : AnimatorListenerAdapter() {
+                    override fun onAnimationEnd(animation: Animator) {
+                        login_form.visibility = if (show) View.GONE else View.VISIBLE
+                    }
+                })
 
-            login_progress.visibility = if (show) View.VISIBLE else View.GONE
-            login_progress.animate()
-                    .setDuration(shortAnimTime)
-                    .alpha((if (show) 1 else 0).toFloat())
-                    .setListener(object : AnimatorListenerAdapter() {
-                        override fun onAnimationEnd(animation: Animator) {
-                            login_progress.visibility = if (show) View.VISIBLE else View.GONE
-                        }
-                    })
-        } else {
-            // The ViewPropertyAnimator APIs are not available, so simply show
-            // and hide the relevant UI components.
-            login_progress.visibility = if (show) View.VISIBLE else View.GONE
-            login_form.visibility = if (show) View.GONE else View.VISIBLE
-        }
+        login_progress.visibility = if (show) View.VISIBLE else View.GONE
+        login_progress.animate()
+                .setDuration(shortAnimTime)
+                .alpha((if (show) 1 else 0).toFloat())
+                .setListener(object : AnimatorListenerAdapter() {
+                    override fun onAnimationEnd(animation: Animator) {
+                        login_progress.visibility = if (show) View.VISIBLE else View.GONE
+                    }
+                })
     }
 
     override fun onCreateLoader(i: Int, bundle: Bundle?): Loader<Cursor> {
