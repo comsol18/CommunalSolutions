@@ -1,4 +1,4 @@
-package com.communalsolutions.www.communalsolutions
+package com.communal_solutions.www.communalsolutions
 
 import android.support.test.InstrumentationRegistry
 import android.support.test.runner.AndroidJUnit4
@@ -19,6 +19,6 @@ class ExampleInstrumentedTest {
     fun useAppContext() {
         // Context of the app under test.
         val appContext = InstrumentationRegistry.getTargetContext()
-        assertEquals("com.communalsolutions.www.communalsolutions", appContext.packageName)
+        assertEquals("com.communal_solutions.www.communalsolutions", appContext.packageName)
     }
 }

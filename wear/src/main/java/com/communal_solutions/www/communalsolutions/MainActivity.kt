@@ -1,4 +1,4 @@
-package com.communalsolutions.www.communalsolutions
+package com.communal_solutions.www.communalsolutions
 
 import android.os.Bundle
 import android.support.wearable.activity.WearableActivity

@@ -1,2 +1,0 @@
-# CommunalSolutions
-Application for internship
