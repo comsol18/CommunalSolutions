@@ -19,7 +19,10 @@ class HomeActivity : AppCompatActivity() {
         var user: FirebaseUser? = FirebaseAuth.getInstance().currentUser
         if (user != null) {
             var profile: TextView = userLoggedIn
-            profile.setText("User: " + user.displayName)
+            val uName = "User: " + user.displayName
+            val uEmail = "\nEmail: " + user.email
+            val uPhone = "\nPhone: " + user.phoneNumber
+            profile.setText(uName + uEmail + uPhone)
         }
     }
 }
