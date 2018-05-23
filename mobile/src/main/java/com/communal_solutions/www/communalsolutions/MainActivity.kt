@@ -18,13 +18,12 @@ import android.provider.ContactsContract
 import android.text.TextUtils
 import android.view.View
 import android.view.inputmethod.EditorInfo
-import android.widget.ArrayAdapter
-import android.widget.TextView
 
 import java.util.ArrayList
 import android.Manifest.permission.READ_CONTACTS
 import android.content.Intent
 import android.util.Log
+import android.widget.*
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
@@ -118,6 +117,27 @@ class MainActivity : AppCompatActivity(), LoaderCallbacks<Cursor>, View.OnClickL
         }
     }
     // [END onActivityResult]
+
+    private fun signInWithEmail() {
+        val email: AutoCompleteTextView = findViewById(R.id.email)
+        val password: EditText = findViewById(R.id.password)
+        mAuth!!.createUserWithEmailAndPassword(email.text.toString(), password.text.toString())
+        .addOnCompleteListener(this, OnCompleteListener<AuthResult>() {
+            @Override
+            fun onComplete(task: Task<AuthResult> ) {
+                if (task.isSuccessful()) {
+                    // Sign in success, update UI with the signed-in user's information
+                    Log.d(TAG, "createUserWithEmail:success")
+                    var user: FirebaseUser? = mAuth!!.getCurrentUser()
+                    updateUI(user)
+                } else {
+                    // If sign in fails, display a message to the user.
+                    Log.w(TAG, "createUserWithEmail:failure", task.getException());
+                    updateUI(null)
+                }
+            }
+        })
+    }
 
     // [START handleSignInResult]
     private fun handleSignInResult(completedTask: Task<GoogleSignInAccount>) {
@@ -298,6 +318,9 @@ class MainActivity : AppCompatActivity(), LoaderCallbacks<Cursor>, View.OnClickL
             showProgress(true)
             mAuthTask = UserLoginTask(emailStr, passwordStr)
             mAuthTask!!.execute(null as Void?)
+            signInWithEmail()
+            val homeIntent: Intent = Intent(this, HomeActivity::class.java)
+            startActivity(homeIntent)
         }
     }
 
@@ -308,7 +331,7 @@ class MainActivity : AppCompatActivity(), LoaderCallbacks<Cursor>, View.OnClickL
 
     private fun isPasswordValid(password: String): Boolean {
         //TODO: Replace this with your own logic
-        return password.length > 4
+        return password.length > 6
     }
 
     /**
