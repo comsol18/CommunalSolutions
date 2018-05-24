@@ -4,6 +4,7 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.TextView
+import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import kotlinx.android.synthetic.main.activity_home.*
@@ -23,6 +24,8 @@ class HomeActivity : AppCompatActivity() {
             val uEmail = "\nEmail: " + user.email
             val uPhone = "\nPhone: " + user.phoneNumber
             profile.setText(uName + uEmail + uPhone)
+        } else {
+            Toast.makeText(this, "No User Logged In", Toast.LENGTH_SHORT).show()
         }
     }
 }
