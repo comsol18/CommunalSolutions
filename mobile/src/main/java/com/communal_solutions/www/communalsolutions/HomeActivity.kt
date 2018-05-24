@@ -1,5 +1,6 @@
 package com.communal_solutions.www.communalsolutions
 
+import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
@@ -16,13 +17,21 @@ class HomeActivity : AppCompatActivity() {
     }
 
     fun getUserLoggedIn(view: View) {
-        var user: FirebaseUser? = FirebaseAuth.getInstance().currentUser
-        if (user != null) {
-            var profile: TextView = userLoggedIn
-            val uName = "User: " + user.displayName
-            val uEmail = "\nEmail: " + user.email
-            val uPhone = "\nPhone: " + user.phoneNumber
-            profile.setText(uName + uEmail + uPhone)
+        val user: FirebaseUser? = FirebaseAuth.getInstance().currentUser
+        val profile: TextView = userLoggedIn
+        val userText: String = if (user != null) {
+            "User: " + user.displayName +
+                "\nEmail: " + user.email +
+                "\nPhone: " + user.phoneNumber
+        } else {
+            "No User Logged In"
         }
+        profile.setText(userText)
+    }
+
+    fun logout(view: View) {
+        FirebaseAuth.getInstance().signOut()
+        val signOutIntent = Intent(this, MainActivity::class.java)
+        startActivity(signOutIntent)
     }
 }
