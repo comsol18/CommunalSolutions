@@ -21,10 +21,10 @@ import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.Task
 import android.support.design.widget.Snackbar
 import android.support.v4.app.FragmentActivity
+import com.google.android.gms.common.SignInButton
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.AuthCredential
-
-
+import kotlinx.android.synthetic.main.activity_main.*
 
 
 class MainActivity : AppCompatActivity() {
@@ -34,7 +34,7 @@ class MainActivity : AppCompatActivity() {
     private fun updateUI(user: FirebaseUser?) {
         val homeIntent: Intent = Intent(this, HomeActivity::class.java)
         if (user != null) {
-            Toast.makeText(this, "Logged In", Toast.LENGTH_SHORT).show()
+            //Toast.makeText(this, "Logged In", Toast.LENGTH_SHORT).show()
             startActivity(homeIntent)
         }
     }
@@ -154,7 +154,7 @@ class MainActivity : AppCompatActivity() {
                             Log.d("Info", "signInWithEmailAndPassword:success")
                             Toast.makeText(this, "Login Success", Toast.LENGTH_SHORT).show()
                             val user: FirebaseUser? = mAuth!!.currentUser
-                            updateUI(user)
+                            updateUI( user)
                         } else {
                             // Registration Errors
                             Log.w("Warning", "signInWithEmailAndPassword:failure")
@@ -170,7 +170,7 @@ class MainActivity : AppCompatActivity() {
                                 Log.d("Info", "createUserWithEmail:success")
                                 Toast.makeText(this, "Login Success", Toast.LENGTH_SHORT).show()
                                 val user: FirebaseUser? = mAuth!!.currentUser
-                                updateUI(user)
+                                updateUI( user)
                             } else {
                                 // Registration Errors
                                 Log.w("Warning", "createUserWithEmail:failure")
@@ -179,12 +179,6 @@ class MainActivity : AppCompatActivity() {
                         })
             }
         }
-    }
-
-    fun signInWithGoogle(view: View) {
-        val RC_SIGN_IN = 9001
-        val signInIntent = signInClient!!.signInIntent
-        startActivityForResult(signInIntent, RC_SIGN_IN)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -230,6 +224,13 @@ class MainActivity : AppCompatActivity() {
                 .requestEmail()
                 .build()
         signInClient = GoogleSignIn.getClient(this, gso)
+
+        findViewById<SignInButton>(R.id.googleSignIn).setOnClickListener {view: View ->
+            val RC_SIGN_IN = 9001
+            val signInIntent: Intent? = signInClient!!.signInIntent
+            if (signInIntent != null) startActivityForResult(signInIntent, RC_SIGN_IN)
+            else Toast.makeText(this, "Intent is null", Toast.LENGTH_SHORT).show()
+        }
     }
 
     override fun onStart() {

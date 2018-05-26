@@ -6,6 +6,8 @@ import android.os.Bundle
 import android.view.View
 import android.widget.TextView
 import android.widget.Toast
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import kotlinx.android.synthetic.main.activity_home.*
@@ -34,7 +36,6 @@ class HomeActivity : AppCompatActivity() {
 
     fun logout(view: View) {
         FirebaseAuth.getInstance().signOut()
-        val signOutIntent = Intent(this, MainActivity::class.java)
-        startActivity(signOutIntent)
+        super.finish()
     }
 }
