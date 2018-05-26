@@ -10,8 +10,8 @@ import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 
 class EmailLogin: AppCompatActivity() {
-    private var email: EditText? = null
-    private var pass: EditText? = null
+    private var email: EditText? = findViewById(R.id.email)
+    private var pass: EditText? = findViewById(R.id.password)
 
     private fun checkValidEmail(eText: String): Boolean {
         // list of most common email addresses
@@ -103,31 +103,17 @@ class EmailLogin: AppCompatActivity() {
 
     // Constructor initialization
     init {
-        email= findViewById(R.id.email)
-        pass = findViewById(R.id.password)
     }
 
-    fun signIn(mAuth: FirebaseAuth) {
+    fun checkCreds(): Boolean {
         val eText = email!!.text.toString()
         val pText = pass!!.text.toString()
 
         // Check to see if email and password are valid
-        if (!checkValidEmail(eText)) return
-        else if (!checkValidPassword(pText)) return
-        else {
-            mAuth.createUserWithEmailAndPassword(eText, pText)
-                    .addOnCompleteListener(this, OnCompleteListener<AuthResult>() { task ->
-                        if (task.isSuccessful) {
-                            // Registration Completes
-                            Log.d("Info", "createUserWithEmail:success")
-                            Toast.makeText(this, "Login Success", Toast.LENGTH_SHORT).show()
-                        } else {
-                            // Registration Errors
-                            Log.w("Warning", "createUserWithEmail:failure")
-                            Toast.makeText(this, "Login Failed", Toast.LENGTH_SHORT).show()
-                        }
-                    })
-        }
+        if (!checkValidEmail(eText)) return false
+        if (!checkValidPassword(pText)) return false
+
+        return true
     }
 
 }
