@@ -21,6 +21,7 @@ import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.Task
 import android.support.design.widget.Snackbar
 import android.support.v4.app.FragmentActivity
+import android.widget.Button
 import com.google.android.gms.common.SignInButton
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.AuthCredential
@@ -139,7 +140,15 @@ class MainActivity : AppCompatActivity() {
         return true
     }
 
-    fun signInWithEmail(view: View) {
+
+    fun signInWithGoogle() {
+        val RC_SIGN_IN = 9001
+        val signInIntent: Intent? = signInClient!!.signInIntent
+        if (signInIntent != null) startActivityForResult(signInIntent, RC_SIGN_IN)
+        else Toast.makeText(this, "Intent is null", Toast.LENGTH_SHORT).show()
+    }
+
+    fun signInWithEmail() {
         val email: EditText = findViewById(R.id.email)
         val pass: EditText = findViewById(R.id.password)
         val eText = email.text.toString()
@@ -225,12 +234,8 @@ class MainActivity : AppCompatActivity() {
                 .build()
         signInClient = GoogleSignIn.getClient(this, gso)
 
-        findViewById<SignInButton>(R.id.googleSignIn).setOnClickListener {view: View ->
-            val RC_SIGN_IN = 9001
-            val signInIntent: Intent? = signInClient!!.signInIntent
-            if (signInIntent != null) startActivityForResult(signInIntent, RC_SIGN_IN)
-            else Toast.makeText(this, "Intent is null", Toast.LENGTH_SHORT).show()
-        }
+        findViewById<SignInButton>(R.id.googleSignIn).setOnClickListener {view: View -> signInWithGoogle()}
+        findViewById<Button>(R.id.emailSignIn).setOnClickListener {view: View -> signInWithEmail() }
     }
 
     override fun onStart() {
