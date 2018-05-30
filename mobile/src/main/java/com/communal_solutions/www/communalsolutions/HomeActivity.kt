@@ -38,4 +38,8 @@ class HomeActivity : AppCompatActivity() {
         FirebaseAuth.getInstance().signOut()
         super.finish()
     }
+
+    fun settings(view: View) {
+        startActivity(Intent(this, SettingsActivity::class.java))
+    }
 }

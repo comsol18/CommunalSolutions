@@ -26,6 +26,7 @@ import com.google.android.gms.common.SignInButton
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.AuthCredential
 import kotlinx.android.synthetic.main.activity_main.*
+import java.lang.Thread.sleep
 
 
 class MainActivity : AppCompatActivity() {
@@ -94,7 +95,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun checkValidPassword(pText: String): Boolean {
-        val email: EditText = findViewById(R.id.email)
         val pass: EditText = findViewById(R.id.password)
 
         when {
@@ -154,10 +154,9 @@ class MainActivity : AppCompatActivity() {
         val eText = email.text.toString()
         val pText = pass.text.toString()
 
-        var create = false
         if (checkCreds(eText, pText) && mAuth != null) {
             mAuth!!.signInWithEmailAndPassword(eText, pText)
-                    .addOnCompleteListener(this, OnCompleteListener<AuthResult>() { task ->
+                    .addOnCompleteListener(this) { task ->
                         if (task.isSuccessful) {
                             // Registration Completes
                             Log.d("Info", "signInWithEmailAndPassword:success")
@@ -167,27 +166,24 @@ class MainActivity : AppCompatActivity() {
                         } else {
                             // Registration Errors
                             Log.w("Warning", "signInWithEmailAndPassword:failure")
-                            create = true
+                            mAuth!!.createUserWithEmailAndPassword(eText, pText)
+                                    .addOnCompleteListener(this) { task ->
+                                        if (task.isSuccessful) {
+                                            // Registration Completes
+                                            Log.d("Info", "createUserWithEmail:success")
+                                            Toast.makeText(this, "Login Success", Toast.LENGTH_SHORT).show()
+                                            val user: FirebaseUser? = mAuth!!.currentUser
+                                            updateUI( user)
+                                        } else {
+                                            // Registration Errors
+                                            Log.w("Warning", "createUserWithEmail:failure")
+                                            Toast.makeText(this, "Login Failed", Toast.LENGTH_SHORT).show()
+                                        }
+                                    }
                         }
-                    })
-
-            if (create) {
-                mAuth!!.createUserWithEmailAndPassword(eText, pText)
-                        .addOnCompleteListener(this, OnCompleteListener<AuthResult>() { task ->
-                            if (task.isSuccessful) {
-                                // Registration Completes
-                                Log.d("Info", "createUserWithEmail:success")
-                                Toast.makeText(this, "Login Success", Toast.LENGTH_SHORT).show()
-                                val user: FirebaseUser? = mAuth!!.currentUser
-                                updateUI( user)
-                            } else {
-                                // Registration Errors
-                                Log.w("Warning", "createUserWithEmail:failure")
-                                Toast.makeText(this, "Login Failed", Toast.LENGTH_SHORT).show()
-                            }
-                        })
-            }
+                    }
         }
+
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
