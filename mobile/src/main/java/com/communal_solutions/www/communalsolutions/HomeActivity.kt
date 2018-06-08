@@ -14,9 +14,13 @@ import kotlinx.android.synthetic.main.activity_home.*
 
 class HomeActivity : AppCompatActivity() {
 
+    var profile: ProfileSchema? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
+
+        profile = ProfileSchema()
     }
 
     fun getUserLoggedIn(view: View) {
