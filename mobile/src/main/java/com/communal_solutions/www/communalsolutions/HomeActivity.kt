@@ -14,18 +14,18 @@ import kotlinx.android.synthetic.main.activity_home.*
 
 class HomeActivity : AppCompatActivity() {
 
-    var profile: ProfileSchema? = null
+    //var profile: ProfileSchema? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
 
-        profile = ProfileSchema()
+        // profile = ProfileSchema()
     }
 
     fun getUserLoggedIn(view: View) {
         val user: FirebaseUser? = FirebaseAuth.getInstance().currentUser
-        val profile: TextView = userLoggedIn
+        val profile: TextView = findViewById(R.id.userLoggedIn)
         val userText: String
         if (user != null) {
             userText = "User: " + user.displayName +

@@ -15,4 +15,7 @@
     </string>
     <string name="save">Save</string>
     <string name="username">Username</string>
+    <string name="display_name">Display Name</string>
+    <string name="phone_number">Phone Number</string>
+    <string name="email">Email</string>
 </resources>
