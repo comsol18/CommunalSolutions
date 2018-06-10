@@ -28,7 +28,7 @@ class SettingsActivity : AppCompatActivity() {
 
         initValues()
 
-        val test: EditText = findViewById(R.id.testField)
+        //val test: EditText = findViewById(R.id.testField)
         //test.setOnEditorActionListener( TextView.OnEditorActionListener())
     }
 }
