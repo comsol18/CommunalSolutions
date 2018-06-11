@@ -18,4 +18,5 @@
     <string name="display_name">Display Name</string>
     <string name="phone_number">Phone Number</string>
     <string name="email">Email</string>
+    <string name="status">Status</string>
 </resources>

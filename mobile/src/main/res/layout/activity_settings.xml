@@ -60,12 +60,14 @@
                     android:hint="@string/email"
                     android:inputType="textEmailAddress" />
 
-                <Spinner
-                    android:id="@+id/spinner"
+                <EditText
+                    android:id="@+id/editStatus"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:visibility="visible" />
+                    android:ems="10"
+                    android:hint="@string/status"
+                    android:inputType="textPersonName" />
 
             </LinearLayout>
 
@@ -75,6 +77,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/save"
+                android:onClick="updateProfile"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
