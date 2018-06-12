@@ -23,21 +23,6 @@ class HomeActivity : AppCompatActivity() {
         // profile = ProfileSchema()
     }
 
-    fun getUserLoggedIn(view: View) {
-        val user: FirebaseUser? = FirebaseAuth.getInstance().currentUser
-        val profile: TextView = findViewById(R.id.userLoggedIn)
-        val userText: String
-        if (user != null) {
-            userText = "User: " + user.displayName +
-                "\nEmail: " + user.email +
-                "\nPhone: " + user.phoneNumber
-        } else {
-            userText = "No User Logged In"
-            Toast.makeText(this, "No User Logged In", Toast.LENGTH_SHORT).show()
-        }
-        profile.setText(userText)
-    }
-
     fun logout(view: View) {
         FirebaseAuth.getInstance().signOut()
         super.finish()
