@@ -82,6 +82,11 @@ class SettingsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
 
+        /*
+	        define references
+	        define current user
+         */
+
         profile_texts.add(findViewById(R.id.editDisplayName))
         profile_texts.add(findViewById(R.id.editUsername))
         profile_texts.add(findViewById(R.id.editPhoneNum))
@@ -89,6 +94,29 @@ class SettingsActivity : AppCompatActivity() {
         profile_texts.add(findViewById(R.id.editStatus))
 
         initValues()
+    }
+
+    override fun onStart() {
+        super.onStart()
+
+        /*
+            define a ValueEventListener
+                onDataChange:
+                    if dataSnapshot exists
+                        get values
+                        use data
+                onCancelled:
+                    do things
+            add listener to reference
+            set global listener to the listener defined
+         */
+    }
+
+    override fun onStop() {
+        super.onStop()
+        /*
+            remove the listener
+         */
     }
 }
 
