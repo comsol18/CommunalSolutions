@@ -9,153 +9,117 @@ import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.*
 import kotlinx.android.synthetic.main.activity_settings.*
-import org.json.JSONObject
-
-
-data class Salad(
-        val name: String = "",
-        val description: String = "",
-        var uuid: String = ""
-)
 
 data class Profile(
     // profile info
     val profile_name: String = "",
     val user_name: String = "",
     val cell_number: String = "",
-    val email_addres: String = "",
+    val email_address: String = "",
     val status: String = "",
     var uuid: String = ""
 )
 
 class SettingsActivity : AppCompatActivity() {
 
-    private var db = FirebaseDatabase.getInstance()
-    private val users = db.getReference("users")
-    private var cUser = FirebaseAuth.getInstance().currentUser!!
-    private var profile_values: MutableList<Profile> = mutableListOf()
-    private val profile_texts: ArrayList<EditText> = ArrayList(5)
+    // database, current user, and db references
+    private var db: FirebaseDatabase? = null
+    private var cUser: FirebaseUser? = null
+    private var dbReference: DatabaseReference? = null
+    private var userReference: DatabaseReference? = null
+    private var profileListener: ValueEventListener? = null
+    private var uid: String? = null
 
-    // Initializing edittexts
-    private fun initValues() {
-        val menuListener = object : ValueEventListener {
+    private fun writeProfileData(profile: Profile) {
+        val uid = cUser!!.uid.hashCode().toString()
+        userReference!!.child(uid).setValue(profile)
+    }
+
+    private fun updateProfile() {
+        val displayName = editDisplayName.text.toString()
+        val phoneNum = editPhoneNum.text.toString()
+        val status = editStatus.text.toString()
+        val email = FirebaseAuth.getInstance().currentUser!!.email.toString()
+        val username = email.substringBefore('@', "")
+
+        // initilize Profile object
+        val profile = Profile(displayName, username, phoneNum, email, status, uid!!)
+
+        // push data to database
+        val updateListener = object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
-                profile_values.clear()
-                dataSnapshot.children.mapNotNullTo(profile_values) {
-                    it.getValue<Profile>(Profile::class.java)
-                }
-
-                profile_values.forEach {
-                    if (it.uuid == cUser.email!!.hashCode().toString()) {
-                        profile_texts[0].setText(it.profile_name)
-                        profile_texts[1].setText(it.user_name)
-                        profile_texts[2].setText(it.email_addres)
-                        profile_texts[3].setText(it.cell_number)
-                        profile_texts[4].setText(it.status)
-                    }
-                }
+                val userData = dataSnapshot.getValue(Profile::class.java)
+                /*if (userData == null) {
+                    Log.e("Error", "onDataChange: User data is null!")
+                    Toast.makeText(this@SettingsActivity, "onDataChange: User data is null!", Toast.LENGTH_SHORT).show()
+                    return
+                }*/
+                writeProfileData(profile)
             }
 
             override fun onCancelled(databaseError: DatabaseError) {
-                println("loadPost:onCancelled ${databaseError.toException()}")
+                Log.e("Error", "onCancelled: Failed to read user!")
             }
         }
-        users.child("users").addValueEventListener(menuListener)
-        Toast.makeText(this, "Data Pulled", Toast.LENGTH_LONG).show()
-    }
 
-    fun updateProfile(view: View) {
-        val email = FirebaseAuth.getInstance().currentUser!!.email.toString()
-        val username = email.substringBefore('@', "")
-        val editName = findViewById<EditText>(R.id.editDisplayName)
-        val editNum = findViewById<EditText>(R.id.editPhoneNum)
-        val editStatus = findViewById<EditText>(R.id.editStatus)
-
-        val profile = Profile(editName.text.toString(), username, editNum.text.toString(), email, editStatus.text.toString(), cUser.email!!.hashCode().toString())
-
-        users.child(cUser.email!!.hashCode().toString()).setValue(profile)
+        dbReference!!.child("users").child(uid!!).addListenerForSingleValueEvent(updateListener)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
 
-        /*
-	        define references
-	        define current user
-         */
+        // define database, current user, and db references
+        db = FirebaseDatabase.getInstance()
+        cUser = FirebaseAuth.getInstance().currentUser
+        dbReference = db!!.reference
+        userReference = db!!.getReference("users")
+        uid = cUser!!.uid.hashCode().toString()
 
-        profile_texts.add(findViewById(R.id.editDisplayName))
-        profile_texts.add(findViewById(R.id.editUsername))
-        profile_texts.add(findViewById(R.id.editPhoneNum))
-        profile_texts.add(findViewById(R.id.editEmail))
-        profile_texts.add(findViewById(R.id.editStatus))
-
-        initValues()
+        // set onclicklistener for save button
+        saveSettings.setOnClickListener {
+            updateProfile()
+        }
     }
 
     override fun onStart() {
         super.onStart()
 
-        /*
-            define a ValueEventListener
-                onDataChange:
-                    if dataSnapshot exists
-                        get values
-                        use data
-                onCancelled:
-                    do things
-            add listener to reference
-            set global listener to the listener defined
-         */
+
+        //define a ValueEventListener
+        val profileListener = object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                // if dataSnapshot exists
+                if (dataSnapshot.exists()) {
+                    val profile = dataSnapshot.child(uid!!).getValue(Profile::class.java)
+                    if (profile != null) {
+                        editDisplayName.setText(profile.profile_name)
+                        editUsername.setText(profile.user_name)
+                        editPhoneNum.setText(profile.cell_number)
+                        editEmail.setText(profile.email_address)
+                        editStatus.setText(profile.status)
+                    }
+                }
+            }
+
+            override fun onCancelled(databaseError: DatabaseError) {
+                Toast.makeText(this@SettingsActivity, "Error: Failed to read user data", Toast.LENGTH_LONG).show()
+            }
+        }
+        //add listener to reference
+        userReference!!.addValueEventListener(profileListener)
+        //set global listener to the listener defined
+        this.profileListener = profileListener
     }
 
     override fun onStop() {
         super.onStop()
-        /*
-            remove the listener
-         */
-    }
-}
-
-/* Reading example
-private fun initSaladMenu(firebaseData: DatabaseReference) {
-    val menuListener = object : ValueEventListener {
-        override fun onDataChange(dataSnapshot: DataSnapshot) {
-            val editName = findViewById<EditText>(R.id.editDisplayName)
-            menu.clear()
-            dataSnapshot.children.mapNotNullTo(menu) {
-                it.getValue<Salad>(Salad::class.java)
-            }
-            menu.forEach {
-                editName.setText(it.name)
-            }
-        }
-
-        override fun onCancelled(databaseError: DatabaseError) {
-            println("loadPost:onCancelled ${databaseError.toException()}")
+        //remove the listener
+        if (profileListener != null) {
+            userReference!!.removeEventListener(profileListener!!)
         }
     }
-    firebaseData.child("salads").addListenerForSingleValueEvent(menuListener)
 }
-// --------------------
-
-// Writing example
-fun loadDatabase(firebaseData: DatabaseReference) {
-    val availableSalads: List<Salad> = mutableListOf(
-            Salad("Gherkin", "Fresh and delicious"),
-            Salad("Lettuce", "Easy to prepare"),
-            Salad("Tomato", "Boring but healthy"),
-            Salad("Zucchini", "Healthy and gross")
-    )
-    availableSalads.forEach {
-        val key = firebaseData.child("salads").push().key
-        it.uuid = key.toString()
-        //firebaseData.child("salads").child(key.toString()).setValue(it)
-    }
-    Toast.makeText(this, "Data Pushed", Toast.LENGTH_LONG).show()
-}
-
-// -------------------- */
