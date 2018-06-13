@@ -69,6 +69,16 @@
                     android:hint="@string/status"
                     android:inputType="textPersonName" />
 
+                <TextView
+                    android:id="@+id/gpsCoordinates"
+                    android:textSize="22sp"
+                    android:gravity="end"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:ems="10"
+                    android:orientation="horizontal" />
+
             </LinearLayout>
 
 
