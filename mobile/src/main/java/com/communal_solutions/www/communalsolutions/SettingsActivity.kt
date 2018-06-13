@@ -88,7 +88,6 @@ class SettingsActivity : AppCompatActivity() {
     override fun onStart() {
         super.onStart()
 
-
         //define a ValueEventListener
         val profileListener = object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
@@ -101,6 +100,8 @@ class SettingsActivity : AppCompatActivity() {
                         editPhoneNum.setText(profile.cell_number)
                         editEmail.setText(profile.email_address)
                         editStatus.setText(profile.status)
+                    } else {
+                        updateProfile()
                     }
                 }
             }
