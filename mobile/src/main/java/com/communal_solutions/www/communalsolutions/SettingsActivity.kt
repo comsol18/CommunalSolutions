@@ -50,8 +50,7 @@ class SettingsActivity : AppCompatActivity() {
     private var locationManager: LocationManager? = null
 
     private fun writeProfileData(profile: Profile) {
-        val uid = cUser!!.uid.hashCode().toString()
-        userReference!!.child(uid).setValue(profile)
+        userReference!!.child(uid!!).setValue(profile)
     }
 
     private fun updateProfile() {
@@ -71,10 +70,12 @@ class SettingsActivity : AppCompatActivity() {
         val updateListener = object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 writeProfileData(profile)
+                Toast.makeText(this@SettingsActivity, "Profile Updated", Toast.LENGTH_SHORT).show()
             }
 
             override fun onCancelled(databaseError: DatabaseError) {
                 Log.e("Error", "onCancelled: Failed to read user!")
+                Toast.makeText(this@SettingsActivity, "Profile Failed To Update", Toast.LENGTH_SHORT).show()
             }
         }
 
@@ -106,6 +107,12 @@ class SettingsActivity : AppCompatActivity() {
         dbReference = db!!.reference
         userReference = db!!.getReference("users")
         uid = cUser!!.uid.hashCode().toString()
+
+        editDisplayName.setText(intent.getStringExtra("display_name"))
+        editUsername.setText(intent.getStringExtra("user_name"))
+        editEmail.setText(intent.getStringExtra("email"))
+        editPhoneNum.setText(intent.getStringExtra("phone_number"))
+        editStatus.setText(intent.getStringExtra("status"))
 
         // set onclicklistener for save button
         saveSettings.setOnClickListener {
@@ -164,9 +171,6 @@ class SettingsActivity : AppCompatActivity() {
 
         // set global listener to the listener defined
         this.profileListener = profileListener
-
-        // get GPS coordinates and update location in db
-
     }
 
     override fun onStop() {

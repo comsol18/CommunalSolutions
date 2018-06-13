@@ -36,7 +36,6 @@ class MainActivity : AppCompatActivity() {
     private fun updateUI(user: FirebaseUser?) {
         val homeIntent: Intent = Intent(this, HomeActivity::class.java)
         if (user != null) {
-            Toast.makeText(this, "Login Success", Toast.LENGTH_SHORT).show()
             startActivity(homeIntent)
         }
     }
@@ -159,7 +158,7 @@ class MainActivity : AppCompatActivity() {
                         if (task.isSuccessful) {
                             // Registration Completes
                             Log.d("Info", "signInWithEmailAndPassword:success")
-                            Toast.makeText(this, "Login Success", Toast.LENGTH_SHORT).show()
+                            //Toast.makeText(this, "Login Success", Toast.LENGTH_SHORT).show()
                             val user: FirebaseUser? = mAuth!!.currentUser
                             updateUI( user)
                         } else {
