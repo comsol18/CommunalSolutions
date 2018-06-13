@@ -136,7 +136,7 @@ class SettingsActivity : AppCompatActivity() {
             }
         } catch(ex: SecurityException) {
             Log.e("Exception", ex.toString())
-            Log.e("myTag", "Security Exception, no location available");
+            Log.e("myTag", "Security Exception, no location available")
         }
     }
 
