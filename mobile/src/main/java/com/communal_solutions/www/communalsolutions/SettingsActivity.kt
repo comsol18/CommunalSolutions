@@ -56,10 +56,13 @@ class SettingsActivity : AppCompatActivity() {
 
     private fun updateProfile() {
         val displayName = editDisplayName.text.toString()
-        val phoneNum = editPhoneNum.text.toString()
+        var phoneNum = editPhoneNum.text.toString()
         val status = editStatus.text.toString()
         val email = FirebaseAuth.getInstance().currentUser!!.email.toString()
         val username = email.substringBefore('@', "")
+
+        phoneNum = if(phoneNum.length == 10)
+            phoneNum.substring(0, 3) + "-" + phoneNum.substring(3, 6) + "-" + phoneNum.substring(6, 10) else phoneNum
 
         // initilize Profile object
         val profile = Profile(displayName, username, phoneNum, email, status, uid!!)
@@ -84,7 +87,7 @@ class SettingsActivity : AppCompatActivity() {
             val long: Double = Math.round(location.longitude*1000.0)/1000.0
             gpsCoordinates.setText("(${lat}, ${long})")
 
-            val userLocation = UserLocation(location.latitude, location.longitude, uid!!)
+            val userLocation = UserLocation(lat, long, uid!!)
             val locReference = db!!.getReference("locations")
             locReference.child(uid!!).setValue(userLocation)
         }
