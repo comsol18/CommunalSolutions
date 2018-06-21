@@ -70,7 +70,7 @@
                     android:hint="@string/status"
                     android:inputType="textPersonName" />
 
-                <TextView
+                <!-- <TextView
                     android:id="@+id/gpsCoordinates"
                     android:textSize="22sp"
                     android:gravity="end"
@@ -79,6 +79,37 @@
                     android:layout_weight="1"
                     android:ems="10"
                     android:orientation="horizontal" />
+                    -->
+
+                <Button android:id="@+id/contact1"
+                    android:hint="Contact 1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <Button android:id="@+id/contact2"
+                    android:hint="Contact 2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <Button android:id="@+id/contact3"
+                    android:hint="Contact 3"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <Button android:id="@+id/contact4"
+                    android:hint="Contact 4"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <Button android:id="@+id/contact5"
+                    android:hint="Contact 5"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <Button android:id="@+id/contact6"
+                    android:hint="Contact 6"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
 
             </LinearLayout>
 
