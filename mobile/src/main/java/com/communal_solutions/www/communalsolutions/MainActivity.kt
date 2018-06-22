@@ -142,7 +142,7 @@ class MainActivity : AppCompatActivity() {
 
     fun signInWithGoogle() {
         val RC_SIGN_IN = 9001
-        val signInIntent: Intent = signInClient!!.signInIntent!!
+        val signInIntent: Intent = signInClient!!.signInIntent
         startActivityForResult(signInIntent, RC_SIGN_IN)
     }
 

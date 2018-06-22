@@ -126,7 +126,7 @@ class HomeActivity : AppCompatActivity() {
             settingsIntent.putExtra("status", passProfile!!.status)
         } else {
             settingsIntent.putExtra("display_name", "random_profile_name${Math.abs(hashCode.hashCode())}")
-            settingsIntent.putExtra("email", cUser!!.email)
+            settingsIntent.putExtra("email", cUser.email)
             settingsIntent.putExtra("user_name", cUser.email!!.substringBefore('@', ""))
             settingsIntent.putExtra("phone_number", getUserNumber())
             settingsIntent.putExtra("status", "")
