@@ -1,11 +1,90 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".MainActivity">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="160dp"
+        android:layout_gravity="center"
+        android:background="@drawable/backgroundblue"
+        android:orientation="vertical">
+
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="70dp"
+            android:text="@string/com"
+            android:textColor="@android:color/background_light"
+            android:textColorHighlight="@android:color/black"
+            android:textSize="25sp"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:textStyle="italic" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <EditText
+            android:id="@+id/email"
+            android:layout_width="400dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="50dp"
+            android:background="@drawable/backgroundblue"
+            android:drawableStart="@drawable/ic_person_black_24dp"
+            android:hint="@string/email"
+            android:padding="10dp"
+            android:textColor="#fff"
+            android:textColorHint="@android:color/background_light" />
+
+        <EditText
+            android:id="@+id/password"
+            android:layout_width="400dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/backgroundblue"
+            android:drawableStart="@drawable/ic_lock_black_24dp"
+            android:hint="@string/pass"
+            android:padding="10dp"
+            android:textColor="#fff"
+            android:textColorHint="@android:color/background_light" />
+
+        <Button
+            android:id="@+id/emailSignIn"
+            android:layout_width="380dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="20dp"
+            android:background="@color/blue"
+            android:text="@string/signin"
+            android:textAlignment="center"
+            android:textColor="#FFffff"
+            android:textSize="20sp" />
+
+        <com.google.android.gms.common.SignInButton
+            android:id="@+id/googleSignIn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginTop="20dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/emailSignIn" />
+
+
+    </LinearLayout>
+    <!--
     <EditText
         android:id="@+id/email"
         android:layout_width="match_parent"
@@ -48,4 +127,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/emailSignIn" />
 
-</android.support.constraint.ConstraintLayout>
+    -->
+
+</LinearLayout>
