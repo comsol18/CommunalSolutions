@@ -27,7 +27,7 @@ data class Profile(
     val user_name: String = "",
     val cell_number: String = "",
     val email_address: String = "",
-    val status: String = "",
+    //val status: String = "",
     var uuid: String = ""
 )
 
@@ -79,7 +79,7 @@ class SettingsActivity : AppCompatActivity() {
         editEmail.setText(intent.getStringExtra("email"))
         val displayName = editDisplayName.text.toString()
         var phoneNum = editPhoneNum.text.toString()
-        val status = editStatus.text.toString()
+        //val status = editStatus.text.toString()
         val email = FirebaseAuth.getInstance().currentUser!!.email.toString()
         val username = editUsername.text.toString()
 
@@ -117,7 +117,7 @@ class SettingsActivity : AppCompatActivity() {
         }
 
         // initilize Profile object
-        val profile = Profile(displayName, username, phoneNum, email, status, uid!!)
+        val profile = Profile(displayName, username, phoneNum, email, uid!!)
         val contactList = getContacts()
 
         // push data to database
@@ -167,7 +167,7 @@ class SettingsActivity : AppCompatActivity() {
         editUsername.setText(intent.getStringExtra("user_name"))
         editEmail.setText(intent.getStringExtra("email"))
         editPhoneNum.setText(intent.getStringExtra("phone_number"))
-        editStatus.setText(intent.getStringExtra("status"))
+        //editStatus.setText(intent.getStringExtra("status"))
 
         // set onclicklistener for save button
         saveSettings.setOnClickListener {
@@ -209,7 +209,7 @@ class SettingsActivity : AppCompatActivity() {
                         editUsername.setText(profile.user_name)
                         editPhoneNum.setText(profile.cell_number)
                         editEmail.setText(profile.email_address)
-                        editStatus.setText(profile.status)
+                        //editStatus.setText(profile.status)
                     } else {
                         updateProfile()
                     }

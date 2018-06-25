@@ -64,11 +64,11 @@ class HomeActivity : AppCompatActivity() {
         val clicker: View.OnClickListener = View.OnClickListener {
             when (it) {
                 logOut -> logout()
-                settings -> loadSettings()
+                //settings -> loadSettings()
             }
         }
         logOut.setOnClickListener(clicker)
-        settings.setOnClickListener(clicker)
+        //settings.setOnClickListener(clicker)
     }
 
     private fun getPermissions() {
@@ -123,13 +123,13 @@ class HomeActivity : AppCompatActivity() {
             settingsIntent.putExtra("email", passProfile!!.email_address)
             settingsIntent.putExtra("user_name", passProfile!!.user_name)
             settingsIntent.putExtra("phone_number", getUserNumber())
-            settingsIntent.putExtra("status", passProfile!!.status)
+            //settingsIntent.putExtra("status", passProfile!!.status)
         } else {
             settingsIntent.putExtra("display_name", "random_profile_name${Math.abs(hashCode.hashCode())}")
             settingsIntent.putExtra("email", cUser.email)
             settingsIntent.putExtra("user_name", cUser.email!!.substringBefore('@', ""))
             settingsIntent.putExtra("phone_number", getUserNumber())
-            settingsIntent.putExtra("status", "")
+            //settingsIntent.putExtra("status", "")
         }
         startActivity(settingsIntent)
     }

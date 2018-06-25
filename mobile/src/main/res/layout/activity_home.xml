@@ -13,6 +13,9 @@
         android:orientation="vertical">
 
         <include layout="@layout/toolbar"/>
+
+
+
     </LinearLayout>
 
     <android.support.design.widget.NavigationView
@@ -25,7 +28,6 @@
 
     </android.support.design.widget.NavigationView>
 
-    <!--
     <Button
         android:id="@+id/logOut"
         android:text="Log Out"
@@ -35,6 +37,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <!--
     <Button
         android:id="@+id/settings"
         android:layout_width="match_parent"
