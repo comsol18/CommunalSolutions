@@ -9,10 +9,12 @@ import android.os.Bundle
 import android.Manifest
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
+import android.support.v7.widget.Toolbar
 import android.util.JsonToken
 import android.util.Log
 import android.view.View
 import android.widget.EditText
+import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
@@ -52,6 +54,8 @@ data class ContactList(
 )
 
 class SettingsActivity : AppCompatActivity() {
+    private var spinner: Spinner? = null
+    private var toolbarTextView: TextView? = null
 
     // database, current user, and db references
     private var db: FirebaseDatabase? = null
@@ -63,6 +67,12 @@ class SettingsActivity : AppCompatActivity() {
     private var uid: String? = null
 
     private var locationManager: LocationManager? = null
+
+    private fun configureToolbar() {
+        val toolbar = findViewById(R.id.toolbar) as Toolbar
+        setSupportActionBar(toolbar)
+        val actionbar = supportActionBar
+    }
 
     private fun writeProfileData(profile: Profile, contactList: ContactList) {
         userReference!!.child(uid!!).setValue(profile)
@@ -154,6 +164,10 @@ class SettingsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
+        toolbarTextView = findViewById(R.id.toolbarTextView) as TextView
+        spinner = findViewById(R.id.spinner) as Spinner
+        configureToolbar()
+        toolbarTextView!!.visibility = View.VISIBLE
 
         // define database, current user, and db references
         db = FirebaseDatabase.getInstance()

@@ -14,16 +14,19 @@
         app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
         app:title="Communal Solutions ">
+
         <TextView
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
             android:id="@+id/toolbarTextView"
             android:visibility="gone"
-            android:layout_gravity="end"
+            android:paddingEnd="20dp"
+            android:layout_gravity="right"
             android:layout_marginEnd="4dp"
             android:textStyle="bold"
             android:textColor="@color/white"
             android:text="@string/verify" />
+
     </android.support.v7.widget.Toolbar>
 
 
