@@ -167,7 +167,9 @@ class SettingsActivity : AppCompatActivity() {
         editUsername.setText(intent.getStringExtra("user_name"))
         editEmail.setText(intent.getStringExtra("email"))
         editPhoneNum.setText(intent.getStringExtra("phone_number"))
-        //editStatus.setText(intent.getStringExtra("status"))
+        val stat = intent.getStringExtra("status")
+        val statSpinner = spinner
+        //statSpinner.set
 
         // set onclicklistener for save button
         saveSettings.setOnClickListener {

@@ -5,9 +5,6 @@ import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
-import android.widget.EditText
-import android.widget.TextView
-import android.widget.Toast
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.firebase.auth.FirebaseAuth
@@ -21,11 +18,20 @@ import android.support.v4.app.ActivityCompat
 import android.content.Context.TELEPHONY_SERVICE
 import android.telephony.TelephonyManager
 import android.Manifest
+import android.content.res.Configuration
+import android.support.v4.widget.DrawerLayout
+import android.support.v7.app.ActionBarDrawerToggle
 import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
+import android.widget.*
 
 
 class HomeActivity : AppCompatActivity() {
 
+    private val layout: RelativeLayout? = null
+    private var mDrawerToggle: ActionBarDrawerToggle? = null
+    private var drawer_layout: DrawerLayout? = null
     private val db = FirebaseDatabase.getInstance()
     private val cUser = FirebaseAuth.getInstance().currentUser
     private val userReference = db.getReference("users")
@@ -57,17 +63,81 @@ class HomeActivity : AppCompatActivity() {
         userReference.addValueEventListener(profileListener)
         this.profileListener = profileListener
 
+        configureNavigationDrawer()
+        configureToolbar()
+
+        drawer_layout = findViewById(R.id.drawer_layout) as DrawerLayout
+        mDrawerToggle = object : ActionBarDrawerToggle(this, drawer_layout, R.string.drawer_open, R.string.drawer_close) {
+            override fun onDrawerOpened(drawerView: View?) {
+                super.onDrawerOpened(drawerView)
+
+                invalidateOptionsMenu()
+            }
+
+            override fun onDrawerClosed(drawerView: View?) {
+                super.onDrawerClosed(drawerView)
+                Log.d("demo", "onDrawerClosed: $title")
+
+                invalidateOptionsMenu()
+            }
+        }
+
+        drawer_layout!!.setDrawerListener(mDrawerToggle)
     }
 
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        //getMenuInflater().inflate(R.menu.navigationmenu, menu);
+        return true
+    }
+
+    private fun configureNavigationDrawer() {
+        drawer_layout = findViewById(R.id.drawer_layout) as DrawerLayout
+    }
+
+    private fun configureToolbar() {
+
+        val toolbar: android.support.v7.widget.Toolbar = findViewById(R.id.toolbar)
+        setSupportActionBar(toolbar)
+        val actionbar = supportActionBar
+        actionbar!!.setHomeAsUpIndicator(R.drawable.ic_lock_black_24dp)
+        actionbar.setDisplayHomeAsUpEnabled(true)
+        actionbar.setHomeButtonEnabled(true)
+
+    }
+
+    override fun onPostCreate(savedInstanceState: Bundle?) {
+        super.onPostCreate(savedInstanceState)
+        mDrawerToggle!!.syncState()
+    }
+
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        mDrawerToggle!!.onConfigurationChanged(newConfig)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        // Pass the event to ActionBarDrawerToggle
+        // If it returns true, then it has handled
+        // the nav drawer indicator touch event
+        val itemId: Int = item.itemId
+        when (itemId) {
+            R.id.settings -> loadSettings()
+            R.id.logOut -> logout()
+        }
+        return if (mDrawerToggle!!.onOptionsItemSelected(item)) {
+            true
+        } else super.onOptionsItemSelected(item)
+        // Handle your other action bar items...
+    }
     override fun onStart() {
         super.onStart()
         val clicker: View.OnClickListener = View.OnClickListener {
             when (it) {
-                logOut -> logout()
+                //logOut -> logout()
                 //settings -> loadSettings()
             }
         }
-        logOut.setOnClickListener(clicker)
+        //logOut.setOnClickListener(clicker)
         //settings.setOnClickListener(clicker)
     }
 
