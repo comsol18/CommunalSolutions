@@ -13,14 +13,12 @@ import android.support.v7.widget.Toolbar
 import android.util.JsonToken
 import android.util.Log
 import android.view.View
-import android.widget.EditText
-import android.widget.Spinner
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.*
 import kotlinx.android.synthetic.main.activity_settings.*
+import kotlinx.android.synthetic.main.toolbar.*
 import kotlin.math.roundToInt
 
 data class Profile(
@@ -56,6 +54,7 @@ data class ContactList(
 class SettingsActivity : AppCompatActivity() {
     private var spinner: Spinner? = null
     private var toolbarTextView: TextView? = null
+    private var toolbarMap: RelativeLayout? = null
 
     // database, current user, and db references
     private var db: FirebaseDatabase? = null
@@ -168,6 +167,7 @@ class SettingsActivity : AppCompatActivity() {
         spinner = findViewById(R.id.spinner) as Spinner
         configureToolbar()
         toolbarTextView!!.visibility = View.VISIBLE
+
 
         // define database, current user, and db references
         db = FirebaseDatabase.getInstance()

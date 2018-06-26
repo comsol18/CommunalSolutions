@@ -40,9 +40,11 @@
             android:layout_height="50dp"
             android:layout_gravity="center"
             android:layout_marginTop="50dp"
+            android:maxLines="1"
             android:background="@drawable/backgroundblue"
             android:drawableStart="@drawable/ic_person_black_24dp"
             android:hint="@string/email"
+            android:inputType="textEmailAddress"
             android:padding="10dp"
             android:textColor="#fff"
             android:textColorHint="@android:color/background_light" />
@@ -53,9 +55,11 @@
             android:layout_height="50dp"
             android:layout_gravity="center"
             android:layout_marginTop="10dp"
+            android:maxLines="1"
             android:background="@drawable/backgroundblue"
             android:drawableStart="@drawable/ic_lock_black_24dp"
             android:hint="@string/pass"
+            android:inputType="textPassword"
             android:padding="10dp"
             android:textColor="#fff"
             android:textColorHint="@android:color/background_light" />
@@ -84,49 +88,5 @@
 
 
     </LinearLayout>
-    <!--
-    <EditText
-        android:id="@+id/email"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:hint="Email Address"
-        android:inputType="textEmailAddress"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <EditText
-        android:id="@+id/password"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:hint="Password"
-        android:inputType="textPassword"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/email" />
-
-    <Button
-        android:id="@+id/emailSignIn"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:text="Email Signin"
-        android:textAllCaps="false"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/password" />
-
-    <com.google.android.gms.common.SignInButton
-        android:id="@+id/googleSignIn"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/emailSignIn" />
-
-    -->
 
 </LinearLayout>
