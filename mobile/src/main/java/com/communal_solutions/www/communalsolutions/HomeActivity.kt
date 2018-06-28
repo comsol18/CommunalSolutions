@@ -5,17 +5,10 @@ import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
-import com.google.android.gms.auth.api.signin.GoogleSignIn
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.*
-import kotlinx.android.synthetic.main.activity_home.*
-import kotlinx.android.synthetic.main.activity_settings.*
-import kotlin.math.roundToInt
 import android.content.pm.PackageManager
 import android.support.v4.app.ActivityCompat
-import android.content.Context.TELEPHONY_SERVICE
 import android.telephony.TelephonyManager
 import android.Manifest
 import android.content.res.Configuration
@@ -25,17 +18,13 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.*
-import com.google.android.gms.maps.CameraUpdateFactory
-import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.OnMapReadyCallback
-import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.gms.maps.*
+import com.google.android.gms.maps.model.*
+import com.communal_solutions.www.communalsolutions.HelperFiles.*
 
 
 class HomeActivity : AppCompatActivity(), OnMapReadyCallback {
 
-    private val layout: RelativeLayout? = null
     private var mDrawerToggle: ActionBarDrawerToggle? = null
     private var drawer_layout: DrawerLayout? = null
     private val db = FirebaseDatabase.getInstance()
@@ -82,7 +71,6 @@ class HomeActivity : AppCompatActivity(), OnMapReadyCallback {
         mDrawerToggle = object : ActionBarDrawerToggle(this, drawer_layout, R.string.drawer_open, R.string.drawer_close) {
             override fun onDrawerOpened(drawerView: View?) {
                 super.onDrawerOpened(drawerView)
-
                 invalidateOptionsMenu()
             }
 
@@ -103,11 +91,11 @@ class HomeActivity : AppCompatActivity(), OnMapReadyCallback {
         // Add a marker in Sydney and move the camera
         val sydney = LatLng(-34.0, 151.0)
         mMap.addMarker(MarkerOptions().position(sydney).title("Marker in Sydney"))
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney))
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(sydney, 15.0f))
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        //getMenuInflater().inflate(R.menu.navigationmenu, menu);
+        getMenuInflater().inflate(R.menu.navigationmenu, menu)
         return true
     }
 
@@ -116,14 +104,12 @@ class HomeActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     private fun configureToolbar() {
-
         val toolbar: android.support.v7.widget.Toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
         val actionbar = supportActionBar
         actionbar!!.setHomeAsUpIndicator(R.drawable.ic_lock_black_24dp)
         actionbar.setDisplayHomeAsUpEnabled(true)
         actionbar.setHomeButtonEnabled(true)
-
     }
 
     override fun onPostCreate(savedInstanceState: Bundle?) {
@@ -150,17 +136,6 @@ class HomeActivity : AppCompatActivity(), OnMapReadyCallback {
         } else super.onOptionsItemSelected(item)
         // Handle your other action bar items...
     }
-    override fun onStart() {
-        super.onStart()
-        val clicker: View.OnClickListener = View.OnClickListener {
-            when (it) {
-                //logOut -> logout()
-                //settings -> loadSettings()
-            }
-        }
-        //logOut.setOnClickListener(clicker)
-        //settings.setOnClickListener(clicker)
-    }
 
     private fun getPermissions() {
         val MY_PERMISSIONS_REQUEST= 9002
@@ -170,15 +145,7 @@ class HomeActivity : AppCompatActivity(), OnMapReadyCallback {
             ActivityCompat.requestPermissions(this@HomeActivity,
                     arrayOf(Manifest.permission.READ_PHONE_STATE, Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.READ_CONTACTS),
                     MY_PERMISSIONS_REQUEST)
-        } /*else if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this@HomeActivity,
-                    arrayOf(Manifest.permission.READ_PHONE_STATE),
-                    MY_PERMISSIONS_REQUEST)
-        } else if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this@HomeActivity,
-                    arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
-                    MY_PERMISSIONS_REQUEST)
-        }*/
+        }
     }
 
     private fun getUserNumber(): String {

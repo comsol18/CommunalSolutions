@@ -12,118 +12,158 @@
         android:id="@+id/incltoolbar"
         layout="@layout/toolbar" />
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="150dp"
-        android:layout_gravity="center"
-        android:background="@null"
-        android:orientation="vertical">
+        android:layout_height="wrap_content">
 
-        <ImageButton
-            android:id="@+id/ibprofile"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_gravity="center"
-            android:layout_marginTop="20dp"
-            android:background="@null"
-            app:srcCompat="@drawable/profileimg" />
-    </LinearLayout>
-
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="4dp"
-        android:layout_marginEnd="5dp"
-        android:layout_marginTop="35dp"
-        android:orientation="vertical">
-
-        <EditText
-            android:id="@+id/editDisplayName"
-            android:maxLines="1"
-            android:layout_width="400dp"
-            android:layout_height="50dp"
-            android:layout_margin="4dp"
-            android:background="@color/light_blue"
-            android:hint="@string/dname"
-            android:inputType="text"
-            android:padding="15dp"
-            android:textAlignment="textStart"
-            android:textColor="@android:color/black"
-            android:textColorHint="@android:color/black" />
-
-        <EditText
-            android:id="@+id/editUsername"
-            android:maxLines="1"
-            android:layout_width="400dp"
-            android:layout_height="50dp"
-            android:layout_margin="4dp"
-            android:background="@color/light_blue"
-            android:ems="10"
-            android:hint="@string/uname"
-            android:inputType="text"
-            android:padding="15dp"
-            android:textColor="@android:color/black"
-            android:textColorHint="@android:color/black" />
-
-        <EditText
-            android:id="@+id/editEmail"
-            android:layout_width="400dp"
-            android:layout_height="50dp"
-            android:layout_margin="4dp"
-            android:background="@color/light_blue"
-            android:ems="10"
-            android:hint="@string/email"
-            android:inputType="text|textEmailAddress"
-            android:maxLines="1"
-            android:padding="15dp"
-            android:textColor="@android:color/black"
-            android:textColorHint="@android:color/black" />
-
-        <EditText
-            android:id="@+id/editPhoneNum"
-            android:maxLines="1"
-            android:layout_width="400dp"
-            android:layout_height="50dp"
-            android:layout_margin="4dp"
-            android:background="@color/light_blue"
-            android:inputType="phone"
-            android:ems="10"
-            android:hint="@string/phone"
-            android:padding="15dp"
-            android:textColor="@android:color/black"
-            android:textColorHint="@android:color/black" />
-
-        <RelativeLayout
-            android:layout_width="400dp"
-            android:layout_height="50dp"
-            android:layout_marginStart="4dp"
-            android:layout_marginTop="4dp"
-            android:background="@color/light_blue">
-
-            <Spinner
-                android:id="@+id/spinner"
-                android:layout_width="360dp"
-                android:layout_height="50dp"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentTop="true"
-                android:layout_marginEnd="4dp"
-                android:layout_marginStart="4dp"
-                android:dropDownSelector="@drawable/ic_arrow_drop_down_black_24dp"
-                android:entries="@array/status"
-                android:textSize="16sp" />
-        </RelativeLayout>
-
-        <Button
-            android:id="@+id/saveSettings"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/save"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="150dp"
+                android:layout_gravity="center"
+                android:background="@null"
+                android:orientation="vertical">
+
+                <ImageButton
+                    android:id="@+id/ibprofile"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="20dp"
+                    android:background="@null"
+                    app:srcCompat="@drawable/profileimg" />
+            </LinearLayout>
 
 
-    </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:layout_marginEnd="5dp"
+                android:layout_marginTop="35dp"
+                android:orientation="vertical">
+
+                <EditText
+                    android:id="@+id/editDisplayName"
+                    android:maxLines="1"
+                    android:layout_width="400dp"
+                    android:layout_height="50dp"
+                    android:layout_margin="4dp"
+                    android:background="@color/light_blue"
+                    android:hint="@string/dname"
+                    android:inputType="text"
+                    android:padding="15dp"
+                    android:textAlignment="textStart"
+                    android:textColor="@android:color/black"
+                    android:textColorHint="@android:color/black" />
+
+                <EditText
+                    android:id="@+id/editUsername"
+                    android:maxLines="1"
+                    android:layout_width="400dp"
+                    android:layout_height="50dp"
+                    android:layout_margin="4dp"
+                    android:background="@color/light_blue"
+                    android:ems="10"
+                    android:hint="@string/uname"
+                    android:inputType="text"
+                    android:padding="15dp"
+                    android:textColor="@android:color/black"
+                    android:textColorHint="@android:color/black" />
+
+                <EditText
+                    android:id="@+id/editEmail"
+                    android:layout_width="400dp"
+                    android:layout_height="50dp"
+                    android:layout_margin="4dp"
+                    android:background="@color/light_blue"
+                    android:ems="10"
+                    android:hint="@string/email"
+                    android:inputType="text|textEmailAddress"
+                    android:maxLines="1"
+                    android:padding="15dp"
+                    android:textColor="@android:color/black"
+                    android:textColorHint="@android:color/black" />
+
+                <EditText
+                    android:id="@+id/editPhoneNum"
+                    android:maxLines="1"
+                    android:layout_width="400dp"
+                    android:layout_height="50dp"
+                    android:layout_margin="4dp"
+                    android:background="@color/light_blue"
+                    android:inputType="phone"
+                    android:ems="10"
+                    android:hint="@string/phone"
+                    android:padding="15dp"
+                    android:textColor="@android:color/black"
+                    android:textColorHint="@android:color/black" />
+
+                <RelativeLayout
+                    android:layout_width="400dp"
+                    android:layout_height="50dp"
+                    android:layout_marginStart="4dp"
+                    android:layout_marginTop="4dp"
+                    android:background="@color/light_blue">
+
+                    <Spinner
+                        android:id="@+id/spinner"
+                        android:layout_width="360dp"
+                        android:layout_height="50dp"
+                        android:layout_alignParentStart="true"
+                        android:layout_alignParentTop="true"
+                        android:layout_marginEnd="4dp"
+                        android:layout_marginStart="4dp"
+                        android:dropDownSelector="@drawable/ic_arrow_drop_down_black_24dp"
+                        android:entries="@array/status"
+                        android:textSize="16sp" />
+                </RelativeLayout>
+
+                <Button android:id="@+id/contact1"
+                    android:text="Contact 1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <Button android:id="@+id/contact2"
+                    android:text="Contact 2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <Button android:id="@+id/contact3"
+                    android:text="Contact 3"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <Button android:id="@+id/contact4"
+                    android:text="Contact 4"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <Button android:id="@+id/contact5"
+                    android:text="Contact 5"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <Button android:id="@+id/contact6"
+                    android:text="Contact 6"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <Button
+                    android:id="@+id/saveSettings"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/save"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
+
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
 
 </LinearLayout>
