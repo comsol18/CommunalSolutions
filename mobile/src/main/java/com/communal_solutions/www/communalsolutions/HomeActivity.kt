@@ -83,6 +83,9 @@ class HomeActivity : AppCompatActivity(), OnMapReadyCallback {
         }
 
         drawer_layout!!.setDrawerListener(mDrawerToggle)
+
+        // for straight to settings
+        loadSettings()
     }
 
     override fun onMapReady(googleMap: GoogleMap) {

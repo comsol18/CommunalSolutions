@@ -31,6 +31,26 @@ class SettingsActivity : AppCompatActivity() {
     // Listeners
     private var profileListener: ValueEventListener? = null
 
+    private fun setOnClickListeners(views: ArrayList<View>) {
+        for (view in views) {
+            when (view) {
+                contact1, contact2, contact3, contact4, contact5, contact6 -> {
+                    view.setOnClickListener {
+                        val contactsIntent = Intent(this, ContactsActivity::class.java)
+                        startActivity(contactsIntent)
+                    }
+                }
+                saveSettings -> {
+                    view.setOnClickListener {
+                        sManager.initEditTexts(editEmail, editPhoneNum)
+                        sManager.updateProfile(this@SettingsActivity, editDisplayName, editPhoneNum, editUsername)
+                    }
+                }
+                else -> {}
+            }
+        }
+    }
+
     private fun configureToolbar() {
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
@@ -41,43 +61,6 @@ class SettingsActivity : AppCompatActivity() {
         dbManager.getReference("users")!!.setValue(profile)
         dbManager.getReference("contacts")!!.setValue(contactList)
     }
-
-    /*
-    private fun getContacts(): ContactList {
-        val contactList = ContactList()
-        return contactList
-    }
-
-    private fun updateProfile() {
-        val displayName = editDisplayName.text.toString()
-        var phoneNum = editPhoneNum.text.toString()
-        val email = FirebaseAuth.getInstance().currentUser!!.email.toString()
-        val username = editUsername.text.toString()
-
-        // Validate Phone Number
-        phoneNum = sManager.validateNumber(phoneNum)
-        if (TextUtils.isEmpty(phoneNum)) editPhoneNum.setError("InvalidNumber")
-
-        // initilize Profile object
-        val profile = Profile(displayName, username, phoneNum, email, uid!!)
-        val contactList = getContacts()
-
-        // push data to database
-        val updateListener = object : ValueEventListener {
-            override fun onDataChange(dataSnapshot: DataSnapshot) {
-                sManager.writeProfileData(contactList)
-                Toast.makeText(this@SettingsActivity, "Profile Updated", Toast.LENGTH_SHORT).show()
-            }
-
-            override fun onCancelled(databaseError: DatabaseError) {
-                Log.e("Error", "onCancelled: Failed to read user!")
-                Toast.makeText(this@SettingsActivity, "Profile Failed To Update", Toast.LENGTH_SHORT).show()
-            }
-        }
-
-        dbPrivateReferences!!.userReference.child(uid!!).addListenerForSingleValueEvent(updateListener)
-    }
-    */
 
     private val locationListener: LocationListener = object : LocationListener {
         override fun onLocationChanged(location: Location) {
@@ -114,12 +97,6 @@ class SettingsActivity : AppCompatActivity() {
         statSpinner.set
         */
 
-        // set onclicklistener for save button
-        saveSettings.setOnClickListener {
-            sManager.initEditTexts(editEmail, editPhoneNum)
-            sManager.updateProfile(this@SettingsActivity, editDisplayName, editPhoneNum, editUsername)
-        }
-
         locationManager = getSystemService(LOCATION_SERVICE) as LocationManager?
         val MY_PERMISSIONS_REQUEST = 9002
 
@@ -140,10 +117,7 @@ class SettingsActivity : AppCompatActivity() {
             Log.e("myTag", "Security Exception, no location available")
         }
 
-        contact1.setOnClickListener {
-            val contactsIntent = Intent(this, ContactsActivity::class.java)
-            startActivity(contactsIntent)
-        }
+        setOnClickListeners(arrayListOf(contact1, contact2, contact3, contact4, contact5, contact6, saveSettings))
     }
 
     @Synchronized override fun onStart() {
@@ -154,13 +128,14 @@ class SettingsActivity : AppCompatActivity() {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 // if dataSnapshot exists
                 if (dataSnapshot.exists()) {
-                    val profile = dataSnapshot.child(dbManager.uuid.toString()).getValue(Profile::class.java)
+                    val profile = dataSnapshot.child("private").child("users").child(dbManager.uuid.toString()).getValue(Profile::class.java)
                     if (profile != null) {
                         sManager.setProfile(profile)
                         sManager.initEditTexts(editDisplayName, editUsername, editEmail, editPhoneNum)
                     } else {
                         sManager.initEditTexts(editEmail, editPhoneNum)
                         sManager.updateProfile(this@SettingsActivity, editDisplayName, editPhoneNum, editUsername)
+                        Toast.makeText(this@SettingsActivity, "Profile is Null", Toast.LENGTH_LONG).show()
                     }
                 }
             }
@@ -224,3 +199,40 @@ class SettingsActivity : AppCompatActivity() {
         return phoneNum
     }
     */
+/*
+private fun getContacts(): ContactList {
+    val contactList = ContactList()
+    return contactList
+}
+
+private fun updateProfile() {
+    val displayName = editDisplayName.text.toString()
+    var phoneNum = editPhoneNum.text.toString()
+    val email = FirebaseAuth.getInstance().currentUser!!.email.toString()
+    val username = editUsername.text.toString()
+
+    // Validate Phone Number
+    phoneNum = sManager.validateNumber(phoneNum)
+    if (TextUtils.isEmpty(phoneNum)) editPhoneNum.setError("InvalidNumber")
+
+    // initilize Profile object
+    val profile = Profile(displayName, username, phoneNum, email, uid!!)
+    val contactList = getContacts()
+
+    // push data to database
+    val updateListener = object : ValueEventListener {
+        override fun onDataChange(dataSnapshot: DataSnapshot) {
+            sManager.writeProfileData(contactList)
+            Toast.makeText(this@SettingsActivity, "Profile Updated", Toast.LENGTH_SHORT).show()
+        }
+
+        override fun onCancelled(databaseError: DatabaseError) {
+            Log.e("Error", "onCancelled: Failed to read user!")
+            Toast.makeText(this@SettingsActivity, "Profile Failed To Update", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    dbPrivateReferences!!.userReference.child(uid!!).addListenerForSingleValueEvent(updateListener)
+}
+*/
+

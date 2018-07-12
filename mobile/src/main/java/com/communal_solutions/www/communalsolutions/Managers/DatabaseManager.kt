@@ -16,9 +16,9 @@ class DatabaseManager {
     var dbReference: DatabaseReference
     var dbPrivateReferences: DBPrivateReferences
 
-    fun writeProfileData(profile: Profile, contactList: ContactList) {
+    fun writeProfileData(profile: Profile) {
         getReference("users")!!.setValue(profile)
-        getReference("contacts")!!.setValue(contactList)
+        //getReference("contacts")!!.setValue(contactList)
     }
 
     fun getReference(ref: String): DatabaseReference? {

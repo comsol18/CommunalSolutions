@@ -1,5 +1,6 @@
 package com.communal_solutions.www.communalsolutions.HelperFiles
 
+import android.provider.ContactsContract
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 
@@ -19,11 +20,6 @@ data class UserLocation(
         val latitude: Double = 0.0,
         val longitude: Double = 0.0,
         var uuid: String = ""
-)
-
-data class Contact(
-        val cName: String = "",
-        val cPhoneNum: String = ""
 )
 
 data class ContactList(

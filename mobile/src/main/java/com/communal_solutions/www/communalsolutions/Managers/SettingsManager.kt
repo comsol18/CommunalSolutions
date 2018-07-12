@@ -12,9 +12,7 @@ import com.google.firebase.database.*
 
 class SettingsManager(intent: Intent) {
     // Fill profile object
-    private val contactManager = ContactManager()
     private val dbManager = DatabaseManager()
-    private var contactList = contactManager.getContacts()
     private var profile: Profile = Profile(
             intent.getStringExtra("display_name"),
             intent.getStringExtra("user_name"),
@@ -42,13 +40,13 @@ class SettingsManager(intent: Intent) {
 
         // initilize Profile object
         profile = Profile(displayName, username, phoneNum, email!!, dbManager.uuid)
-        contactList = contactManager.getContacts()
+        //contactList = contactManager.getContacts()
 
         // push data to database
         val updateListener = object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
-                dbManager.writeProfileData(profile, contactList)
-                Toast.makeText(context, "Profile Updated", Toast.LENGTH_SHORT).show()
+                dbManager.writeProfileData(profile)
+                //Toast.makeText(context, "Profile Updated", Toast.LENGTH_SHORT).show()
             }
 
             override fun onCancelled(databaseError: DatabaseError) {
