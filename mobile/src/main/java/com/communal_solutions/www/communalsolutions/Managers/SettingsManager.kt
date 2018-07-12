@@ -19,7 +19,8 @@ class SettingsManager(intent: Intent) {
             intent.getStringExtra("display_name"),
             intent.getStringExtra("user_name"),
             intent.getStringExtra("phone_number"),
-            intent.getStringExtra("email")
+            intent.getStringExtra("email"),
+            dbManager.uuid
     )
 
     // Reset the profile object
@@ -33,14 +34,14 @@ class SettingsManager(intent: Intent) {
         val displayName = editTextArrayList[0].text.toString()
         var phoneNum = editTextArrayList[1].text.toString()
         val username = editTextArrayList[2].text.toString()
-        val email = dbManager.getUser()!!.email.toString()
+        val email = dbManager.cUser!!.email
 
         // Validate Phone Number
         phoneNum = validateNumber(phoneNum)
         if (TextUtils.isEmpty(phoneNum)) editTextArrayList[1].setError("InvalidNumber")
 
         // initilize Profile object
-        profile = Profile(displayName, username, phoneNum, email, dbManager.getUID())
+        profile = Profile(displayName, username, phoneNum, email!!, dbManager.uuid)
         contactList = contactManager.getContacts()
 
         // push data to database

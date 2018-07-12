@@ -10,14 +10,11 @@ import com.google.firebase.database.FirebaseDatabase
 
 class DatabaseManager {
     // database, current user, and db references
-    private var db: FirebaseDatabase
-    private var uid: String
-    private var cUser: FirebaseUser?
-    private var dbReference: DatabaseReference
-    private var dbPrivateReferences: DBPrivateReferences
-
-    fun getUID(): String { return uid }
-    fun getUser(): FirebaseUser? { return cUser }
+    var db: FirebaseDatabase
+    var uuid: Int
+    var cUser: FirebaseUser?
+    var dbReference: DatabaseReference
+    var dbPrivateReferences: DBPrivateReferences
 
     fun writeProfileData(profile: Profile, contactList: ContactList) {
         getReference("users")!!.setValue(profile)
@@ -26,9 +23,9 @@ class DatabaseManager {
 
     fun getReference(ref: String): DatabaseReference? {
         return when (ref) {
-            "users" -> dbPrivateReferences.userReference.child(uid)
-            "locations" -> dbPrivateReferences.locReference.child(uid)
-            "contacts" -> dbPrivateReferences.contactsReference.child(uid)
+            "users" -> dbPrivateReferences.userReference.child(uuid.toString())
+            "locations" -> dbPrivateReferences.locReference.child(uuid.toString())
+            "contacts" -> dbPrivateReferences.contactsReference.child(uuid.toString())
             "private" -> dbPrivateReferences.dbPrivate!!
             else -> null
         }
@@ -39,6 +36,6 @@ class DatabaseManager {
         dbReference = db.reference
         dbPrivateReferences = DBPrivateReferences(dbReference.child("private"))
         cUser = FirebaseAuth.getInstance().currentUser
-        uid = cUser!!.uid.hashCode().toString()
+        uuid = cUser!!.uid.hashCode()
     }
 }

@@ -5,6 +5,7 @@ import android.location.*
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.Manifest
+import android.content.Intent
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.Toolbar
@@ -84,7 +85,7 @@ class SettingsActivity : AppCompatActivity() {
             val long: Double = Math.round(location.longitude*1000.0)/1000.0
             //gpsCoordinates.setText("(${lat}, ${long})")
 
-            val userLocation = UserLocation(lat, long, dbManager.getUID())
+            val userLocation = UserLocation(lat, long, dbManager.uuid.toString())
             dbManager.getReference("locations")!!.setValue(userLocation)
         }
         override fun onStatusChanged(provider: String, status: Int, extras: Bundle) {}
@@ -138,6 +139,11 @@ class SettingsActivity : AppCompatActivity() {
             Log.e("Exception", ex.toString())
             Log.e("myTag", "Security Exception, no location available")
         }
+
+        contact1.setOnClickListener {
+            val contactsIntent = Intent(this, ContactsActivity::class.java)
+            startActivity(contactsIntent)
+        }
     }
 
     @Synchronized override fun onStart() {
@@ -148,7 +154,7 @@ class SettingsActivity : AppCompatActivity() {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 // if dataSnapshot exists
                 if (dataSnapshot.exists()) {
-                    val profile = dataSnapshot.child(dbManager.getUID()).getValue(Profile::class.java)
+                    val profile = dataSnapshot.child(dbManager.uuid.toString()).getValue(Profile::class.java)
                     if (profile != null) {
                         sManager.setProfile(profile)
                         sManager.initEditTexts(editDisplayName, editUsername, editEmail, editPhoneNum)

@@ -15,16 +15,6 @@ data class DBPublicReferences(
         val dbReference: DatabaseReference = database.reference.child("public")
 )
 
-data class Profile(
-        // profile info
-        var profile_name: String = "",
-        var user_name: String = "",
-        var cell_number: String = "",
-        var email_address: String = "",
-        //val status: String = "",
-        var uuid: String = ""
-)
-
 data class UserLocation(
         val latitude: Double = 0.0,
         val longitude: Double = 0.0,

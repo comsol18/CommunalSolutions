@@ -50,7 +50,7 @@ class HomeActivity : AppCompatActivity(), OnMapReadyCallback {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 // if dataSnapshot exists
                 if (dataSnapshot.exists()) {
-                    val profile = dataSnapshot.child("private").child(uid).getValue(Profile::class.java)
+                    val profile = dataSnapshot.child("private").child("users").child(uid).getValue(Profile::class.java)
                     passProfile = profile
                 }
             }

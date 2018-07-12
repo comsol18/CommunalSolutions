@@ -9,4 +9,6 @@
     <color name="darkgrey">#6c6c6c</color>
     <color name="blue">#4682b4</color>
     <color name="light_blue">#E0FFFF</color>
+    <color name="contact_name">#333333</color>
+    <color name="contact_number">#8c8c8c</color>
 </resources>
