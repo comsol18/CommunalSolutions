@@ -11,28 +11,6 @@ import android.widget.TextView
 import com.communal_solutions.www.communalsolutions.HelperFiles.*
 import com.communal_solutions.www.communalsolutions.R
 
-fun formatObject(obj: String): String {
-    val name = obj.substringBefore('(')
-    val lead = "$name Object"
-    val values: ArrayList<String> = ArrayList()
-
-    var str = obj.substringAfter('(')
-    while (true) {
-        if (str.contains(", ")) {
-            values.add(str.substringBefore(", "))
-            str = str.substringAfter(", ")
-        } else {
-            values.add(str.substringBefore(')'))
-            break
-        }
-    }
-
-    var result = "$lead\n$name("
-    for (value in values) { result += "\n\t$value" }
-    result += "\n)"
-    return result
-}
-
 class ContactsAdapter(private val context: Context, private val contactList: List<Contact>, private val parentActivity: Activity) : RecyclerView.Adapter<ContactsAdapter.ViewHolder>() {
 
     private val TAG = "ContactsAdapter"

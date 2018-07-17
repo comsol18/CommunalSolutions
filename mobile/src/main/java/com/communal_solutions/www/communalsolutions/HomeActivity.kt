@@ -21,18 +21,16 @@ import android.widget.*
 import com.google.android.gms.maps.*
 import com.google.android.gms.maps.model.*
 import com.communal_solutions.www.communalsolutions.HelperFiles.*
+import com.communal_solutions.www.communalsolutions.Managers.DatabaseManager
 
 
 class HomeActivity : AppCompatActivity(), OnMapReadyCallback {
 
-    private var mDrawerToggle: ActionBarDrawerToggle? = null
-    private var drawer_layout: DrawerLayout? = null
-    private val db = FirebaseDatabase.getInstance()
-    private val cUser = FirebaseAuth.getInstance().currentUser
-    private val userReference = db.getReference("users")
-    private val uid = cUser!!.uid.hashCode().toString()
+    private val dbManager = DatabaseManager()
     private var profileListener: ValueEventListener? = null
     private var passProfile: Profile? = null
+    private var mDrawerToggle: ActionBarDrawerToggle? = null
+    private var drawer_layout: DrawerLayout? = null
     private lateinit var mMap: GoogleMap
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -45,6 +43,25 @@ class HomeActivity : AppCompatActivity(), OnMapReadyCallback {
 
         Toast.makeText(this, "Login Success", Toast.LENGTH_SHORT).show()
         getPermissions()
+
+        val profileListener = object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                // if dataSnapshot exists
+                if (dataSnapshot.exists()) {
+                    val profile = dataSnapshot.getValue(Profile::class.java)
+                    dLog("HomeActivity.profileListener", "profileIsNull=${profile==null}")
+                    passProfile = profile
+                } else eLog("HomeActivity.profileListener", "dataSnapshot DNE")
+            }
+
+            override fun onCancelled(databaseError: DatabaseError) {
+                Toast.makeText(this@HomeActivity, "Error: Failed to read user data", Toast.LENGTH_LONG).show()
+            }
+        }
+
+        // add listener to reference
+        dbManager.getReference("users").addValueEventListener(profileListener)
+        this.profileListener = profileListener
 
         configureNavigationDrawer()
         configureToolbar()
@@ -70,29 +87,6 @@ class HomeActivity : AppCompatActivity(), OnMapReadyCallback {
         //loadSettings()
     }
 
-    override fun onStart() {
-        super.onStart()
-
-        val profileListener = object : ValueEventListener {
-            override fun onDataChange(dataSnapshot: DataSnapshot) {
-                // if dataSnapshot exists
-                if (dataSnapshot.exists()) {
-                    val profile = dataSnapshot.child("private").child("users").child(uid).getValue(Profile::class.java)
-                    dLog("HomeActivity.profileListener", "profileIsNull=${profile==null}")
-                    passProfile = profile
-                } else eLog("HomeActivity.profileListener", "dataSnapshot DNE")
-            }
-
-            override fun onCancelled(databaseError: DatabaseError) {
-                Toast.makeText(this@HomeActivity, "Error: Failed to read user data", Toast.LENGTH_LONG).show()
-            }
-        }
-
-        // add listener to reference
-        userReference.addValueEventListener(profileListener)
-        this.profileListener = profileListener
-    }
-
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
 
@@ -114,10 +108,9 @@ class HomeActivity : AppCompatActivity(), OnMapReadyCallback {
     private fun configureToolbar() {
         val toolbar: android.support.v7.widget.Toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
-        val actionbar = supportActionBar
-        actionbar!!.setHomeAsUpIndicator(R.drawable.ic_lock_black_24dp)
-        actionbar.setDisplayHomeAsUpEnabled(true)
-        actionbar.setHomeButtonEnabled(true)
+        supportActionBar!!.setHomeAsUpIndicator(R.drawable.ic_lock_black_24dp)
+        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+        supportActionBar!!.setHomeButtonEnabled(true)
     }
 
     override fun onPostCreate(savedInstanceState: Bundle?) {
@@ -185,17 +178,19 @@ class HomeActivity : AppCompatActivity(), OnMapReadyCallback {
 
     @Synchronized private fun loadSettings() {
         val settingsIntent = Intent(this, SettingsActivity::class.java)
-        val hashCode: Int = cUser!!.uid.hashCode()
+        val hashCode: Int = dbManager.cUser!!.uid.hashCode()
         if (passProfile != null) {
+            dLog("HomeActivity.loadSettings", "passProfile is not null")
             settingsIntent.putExtra("display_name", passProfile!!.profile_name)
             settingsIntent.putExtra("email", passProfile!!.email_address)
             settingsIntent.putExtra("user_name", passProfile!!.user_name)
             settingsIntent.putExtra("phone_number", getUserNumber())
             //settingsIntent.putExtra("status", passProfile!!.status)
         } else {
+            eLog("HomeActivity.loadSettings", "passProfile is null")
             settingsIntent.putExtra("display_name", "random_profile_name${Math.abs(hashCode.hashCode())}")
-            settingsIntent.putExtra("email", cUser.email)
-            settingsIntent.putExtra("user_name", cUser.email!!.substringBefore('@', ""))
+            settingsIntent.putExtra("email", dbManager.cUser!!.email)
+            settingsIntent.putExtra("user_name", dbManager.cUser!!.email!!.substringBefore('@', ""))
             settingsIntent.putExtra("phone_number", getUserNumber())
             //settingsIntent.putExtra("status", "")
         }
@@ -203,7 +198,7 @@ class HomeActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     fun logout() {
-        userReference.removeEventListener(profileListener!!)
+        dbManager.getReference("users").removeEventListener(profileListener!!)
         FirebaseAuth.getInstance().signOut()
         super.finish()
     }

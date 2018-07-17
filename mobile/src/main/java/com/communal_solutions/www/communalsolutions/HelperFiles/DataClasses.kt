@@ -4,11 +4,13 @@ import android.provider.ContactsContract
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 
-data class DBPrivateReferences(
-        val dbPrivate: DatabaseReference? = null,
-        val userReference: DatabaseReference = dbPrivate!!.child("users"),
-        val locReference: DatabaseReference = dbPrivate!!.child("locations"),
-        val contactsReference: DatabaseReference = dbPrivate!!.child("contacts")
+data class DBReferences(
+        val dbReference: DatabaseReference? = null,
+        val uid: String = "",
+        val userReference: DatabaseReference = dbReference!!.child("users").child(uid),
+        val locReference: DatabaseReference = dbReference!!.child("locations").child(uid),
+        val contactsReference: DatabaseReference = dbReference!!.child("contacts").child(uid),
+        val debugReference: DatabaseReference = dbReference!!.child("debug").child(uid)
 )
 
 data class DBPublicReferences(

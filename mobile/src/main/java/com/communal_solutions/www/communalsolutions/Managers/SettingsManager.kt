@@ -55,7 +55,7 @@ class SettingsManager(intent: Intent) {
             }
         }
 
-        dbManager.getReference("users")!!.addListenerForSingleValueEvent(updateListener)
+        dbManager.getReference("users").addListenerForSingleValueEvent(updateListener)
     }
 
     // Initializes EditText values

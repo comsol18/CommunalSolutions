@@ -3,12 +3,13 @@ package com.communal_solutions.www.communalsolutions.HelperFiles
 import android.util.Log
 
 class Profile() {
+    val TAG = "Profile"
     // profile info
     var profile_name: String = ""
     var user_name: String = ""
     var cell_number: String = ""
     var email_address: String = ""
-    var uuid: Int = 0
+    var uuid: String = ""
         private set
     //private val status: String = ""
 
@@ -17,10 +18,10 @@ class Profile() {
         user_name = getToStringValue("user_name", profile)
         cell_number = getToStringValue("cell_number", profile)
         email_address = getToStringValue("email_address", profile)
-        uuid = Integer.parseInt(getToStringValue("uuid", profile))
+        uuid = getToStringValue("uuid", profile)
     }
 
-    constructor(profile: String, user: String, cell: String, email: String, uuid: Int): this() {
+    constructor(profile: String, user: String, cell: String, email: String, uuid: String): this() {
         profile_name = profile
         user_name = user
         cell_number = cell
@@ -31,7 +32,7 @@ class Profile() {
     private fun getToStringValue(variable: String, str: String): String {
         val delimit = variable + "='"
         val value = str.substringAfter(delimit).substringBefore("'")
-        Log.e("Value", value)
+        Log.e(TAG, value)
         return value
     }
 

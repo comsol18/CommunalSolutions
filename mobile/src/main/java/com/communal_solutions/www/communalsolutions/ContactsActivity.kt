@@ -8,7 +8,6 @@ import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.widget.Toast
 import com.communal_solutions.www.communalsolutions.Adapters.ContactsAdapter
-import com.communal_solutions.www.communalsolutions.Adapters.formatObject
 import com.communal_solutions.www.communalsolutions.HelperFiles.*
 import kotlinx.android.synthetic.main.activity_contacts.*
 import java.util.*

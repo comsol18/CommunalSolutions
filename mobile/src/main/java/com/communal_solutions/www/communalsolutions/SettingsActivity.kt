@@ -129,7 +129,7 @@ class SettingsActivity : AppCompatActivity() {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 // if dataSnapshot exists
                 if (dataSnapshot.exists()) {
-                    val profile = dataSnapshot.child("private").child("users").child(dbManager.uuid.toString()).getValue(Profile::class.java)
+                    val profile = dataSnapshot.child("users").child(dbManager.uuid.toString()).getValue(Profile::class.java)
                     if (profile != null) {
                         sManager.setProfile(profile)
                         sManager.initEditTexts(editDisplayName, editUsername, editEmail, editPhoneNum)
