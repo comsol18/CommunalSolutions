@@ -1,12 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
+        android:id="@+id/commInfo"
+        android:icon="@android:drawable/ic_dialog_info"
+        android:onClick="onOptionsItemSelected"
+        android:title="@string/info" />
+    <item
+        android:id="@+id/commEvents"
+        android:icon="@android:drawable/ic_menu_my_calendar"
+        android:onClick="onOptionsItemSelected"
+        android:title="@string/events" />
+    <item
         android:id="@+id/settings"
         android:onClick="onOptionsItemSelected"
         android:icon="@drawable/ic_settings_black_24dp"
         android:title="@string/settings" />
-    <item android:id="@+id/logOut"
+    <item
+        android:id="@+id/logOut"
         android:onClick="onOptionsItemSelected"
-        android:title="@string/logout"
-        android:icon="@drawable/ic_exit_to_app_black_24dp"/>
+        android:icon="@drawable/ic_exit_to_app_black_24dp"
+        android:title="@string/logout" />
 </menu>

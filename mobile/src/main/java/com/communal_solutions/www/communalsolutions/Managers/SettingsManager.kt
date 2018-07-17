@@ -46,7 +46,7 @@ class SettingsManager(intent: Intent) {
         val updateListener = object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 dbManager.writeProfileData(profile)
-                //Toast.makeText(context, "Profile Updated", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "Profile Updated", Toast.LENGTH_SHORT).show()
             }
 
             override fun onCancelled(databaseError: DatabaseError) {

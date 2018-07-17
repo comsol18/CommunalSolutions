@@ -46,24 +46,6 @@ class HomeActivity : AppCompatActivity(), OnMapReadyCallback {
         Toast.makeText(this, "Login Success", Toast.LENGTH_SHORT).show()
         getPermissions()
 
-        val profileListener = object : ValueEventListener {
-            override fun onDataChange(dataSnapshot: DataSnapshot) {
-                // if dataSnapshot exists
-                if (dataSnapshot.exists()) {
-                    val profile = dataSnapshot.child("private").child("users").child(uid).getValue(Profile::class.java)
-                    passProfile = profile
-                }
-            }
-
-            override fun onCancelled(databaseError: DatabaseError) {
-                Toast.makeText(this@HomeActivity, "Error: Failed to read user data", Toast.LENGTH_LONG).show()
-            }
-        }
-
-        // add listener to reference
-        userReference.addValueEventListener(profileListener)
-        this.profileListener = profileListener
-
         configureNavigationDrawer()
         configureToolbar()
 
@@ -85,7 +67,30 @@ class HomeActivity : AppCompatActivity(), OnMapReadyCallback {
         drawer_layout!!.setDrawerListener(mDrawerToggle)
 
         // for straight to settings
-        loadSettings()
+        //loadSettings()
+    }
+
+    override fun onStart() {
+        super.onStart()
+
+        val profileListener = object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                // if dataSnapshot exists
+                if (dataSnapshot.exists()) {
+                    val profile = dataSnapshot.child("private").child("users").child(uid).getValue(Profile::class.java)
+                    dLog("HomeActivity.profileListener", "profileIsNull=${profile==null}")
+                    passProfile = profile
+                } else eLog("HomeActivity.profileListener", "dataSnapshot DNE")
+            }
+
+            override fun onCancelled(databaseError: DatabaseError) {
+                Toast.makeText(this@HomeActivity, "Error: Failed to read user data", Toast.LENGTH_LONG).show()
+            }
+        }
+
+        // add listener to reference
+        userReference.addValueEventListener(profileListener)
+        this.profileListener = profileListener
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
@@ -131,6 +136,8 @@ class HomeActivity : AppCompatActivity(), OnMapReadyCallback {
         // the nav drawer indicator touch event
         val itemId: Int = item.itemId
         when (itemId) {
+            R.id.commInfo -> {}
+            R.id.commEvents -> {}
             R.id.settings -> loadSettings()
             R.id.logOut -> logout()
         }

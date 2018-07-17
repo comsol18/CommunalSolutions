@@ -8,13 +8,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import com.communal_solutions.www.communalsolutions.HelperFiles.Contact
+import com.communal_solutions.www.communalsolutions.HelperFiles.*
 import com.communal_solutions.www.communalsolutions.R
-
-fun dLog(tag: String, msg: String) {
-    Log.d(tag, msg)
-    Thread.sleep(1)
-}
 
 fun formatObject(obj: String): String {
     val name = obj.substringBefore('(')

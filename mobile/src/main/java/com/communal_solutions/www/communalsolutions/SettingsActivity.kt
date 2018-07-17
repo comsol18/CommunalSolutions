@@ -54,7 +54,8 @@ class SettingsActivity : AppCompatActivity() {
     private fun configureToolbar() {
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
-        val actionbar = supportActionBar
+        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+        // val actionbar = supportActionBar
     }
 
     private fun writeProfileData(profile: Profile, contactList: ContactList) {

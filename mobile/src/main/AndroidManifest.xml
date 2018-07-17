@@ -28,7 +28,13 @@
             </intent-filter>
         </activity>
         <activity android:name=".HomeActivity" />
-        <activity android:name=".SettingsActivity" />
+        <activity android:name=".SettingsActivity"
+            android:parentActivityName=".HomeActivity"
+            android:windowSoftInputMode="stateHidden">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.communal_solutions.www.communalsolutions.HomeActivity" />
+        </activity>
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
@@ -41,7 +47,7 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
 
-        <activity android:name=".ContactsActivity"></activity>
+        <activity android:name=".ContactsActivity" />
     </application>
 
 </manifest>
