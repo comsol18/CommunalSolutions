@@ -19,10 +19,13 @@ import kotlinx.android.synthetic.main.activity_settings.*
 
 class SettingsActivity : AppCompatActivity() {
 
+    // Database References
+    private val dbValues = DBValues()
+    private val dbReferences = DBReferences()
+
     // Managers
     private var locationManager: LocationManager? = null
     private lateinit var sManager: SettingsManager
-    private lateinit var dbManager: DatabaseManager
 
     // Views
     private var spinner: Spinner? = null
@@ -55,22 +58,14 @@ class SettingsActivity : AppCompatActivity() {
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
-        // val actionbar = supportActionBar
-    }
-
-    private fun writeProfileData(profile: Profile, contactList: ContactList) {
-        dbManager.getReference("users")!!.setValue(profile)
-        dbManager.getReference("contacts")!!.setValue(contactList)
     }
 
     private val locationListener: LocationListener = object : LocationListener {
         override fun onLocationChanged(location: Location) {
             val lat: Double = Math.round(location.latitude*1000.0)/1000.0
             val long: Double = Math.round(location.longitude*1000.0)/1000.0
-            //gpsCoordinates.setText("(${lat}, ${long})")
-
-            val userLocation = UserLocation(lat, long, dbManager.uuid.toString())
-            dbManager.getReference("locations")!!.setValue(userLocation)
+            val userLocation = UserLocation(lat, long, dbValues.uuid)
+            dbReferences.locReference.setValue(userLocation)
         }
         override fun onStatusChanged(provider: String, status: Int, extras: Bundle) {}
         override fun onProviderEnabled(provider: String) {}
@@ -84,19 +79,12 @@ class SettingsActivity : AppCompatActivity() {
         // Initiate the Settings Manager
         sManager = SettingsManager(intent)
         sManager.initEditTexts( editDisplayName, editUsername, editEmail, editPhoneNum )
-        dbManager = DatabaseManager()
 
         // Configure the toolbar
         toolbarTextView = findViewById(R.id.toolbarTextView) as TextView
         spinner = findViewById(R.id.spinner) as Spinner
         configureToolbar()
         toolbarTextView!!.visibility = View.VISIBLE
-
-        /* Set the Status spinner
-        val stat = intent.getStringExtra("status")
-        val statSpinner = spinner
-        statSpinner.set
-        */
 
         locationManager = getSystemService(LOCATION_SERVICE) as LocationManager?
         val MY_PERMISSIONS_REQUEST = 9002
@@ -129,9 +117,9 @@ class SettingsActivity : AppCompatActivity() {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 // if dataSnapshot exists
                 if (dataSnapshot.exists()) {
-                    val profile = dataSnapshot.child("private").child("users").child(dbManager.uuid.toString()).getValue(Profile::class.java)
+                    val profile = dataSnapshot.getValue(Profile::class.java)
                     if (profile != null) {
-                        sManager.setProfile(profile)
+                        sManager.profile = profile
                         sManager.initEditTexts(editDisplayName, editUsername, editEmail, editPhoneNum)
                     } else {
                         sManager.initEditTexts(editEmail, editPhoneNum)
@@ -147,7 +135,7 @@ class SettingsActivity : AppCompatActivity() {
         }
 
         // add listener to reference
-        dbManager.getReference("users")!!.addValueEventListener(profileListener)
+        dbReferences.userReference.addValueEventListener(profileListener)
 
         // set global listener to the listener defined
         this.profileListener = profileListener
@@ -157,83 +145,8 @@ class SettingsActivity : AppCompatActivity() {
         super.onStop()
         //remove the listener
         if (profileListener != null) {
-            dbManager.getReference("users")!!.removeEventListener(profileListener!!)
+            dbReferences.userReference.removeEventListener(profileListener!!)
         }
     }
 }
-
-/*
-    private fun validateNumber(number: String): String {
-        var phoneNum = number
-        if(phoneNum.length == 10) {
-            for (c in phoneNum) {
-                if (!c.isDigit()) {
-                    editPhoneNum.setError("Invalid Number")
-                    phoneNum = ""
-                    return phoneNum
-                }
-            }
-            phoneNum = phoneNum.substring(0, 3) + "-" + phoneNum.substring(3, 6) + "-" + phoneNum.substring(6, 10)
-        } else if (phoneNum.length == 12) {
-            loop@ for (i in 0..11) {
-                when (i) {
-                    3, 7 -> {
-                        if (phoneNum[i] != '-') {
-                            editPhoneNum.setError("Invalid Number")
-                            phoneNum = ""
-                            break@loop
-                        }
-                    }
-                    else -> {
-                        if (!phoneNum[i].isDigit()) {
-                            editPhoneNum.setError("Invalid Number")
-                            phoneNum = ""
-                            break@loop
-                        }
-                    }
-                }
-            }
-        } else {
-            editPhoneNum.setError("Invalid Number")
-            phoneNum = ""
-        }
-        return phoneNum
-    }
-    */
-/*
-private fun getContacts(): ContactList {
-    val contactList = ContactList()
-    return contactList
-}
-
-private fun updateProfile() {
-    val displayName = editDisplayName.text.toString()
-    var phoneNum = editPhoneNum.text.toString()
-    val email = FirebaseAuth.getInstance().currentUser!!.email.toString()
-    val username = editUsername.text.toString()
-
-    // Validate Phone Number
-    phoneNum = sManager.validateNumber(phoneNum)
-    if (TextUtils.isEmpty(phoneNum)) editPhoneNum.setError("InvalidNumber")
-
-    // initilize Profile object
-    val profile = Profile(displayName, username, phoneNum, email, uid!!)
-    val contactList = getContacts()
-
-    // push data to database
-    val updateListener = object : ValueEventListener {
-        override fun onDataChange(dataSnapshot: DataSnapshot) {
-            sManager.writeProfileData(contactList)
-            Toast.makeText(this@SettingsActivity, "Profile Updated", Toast.LENGTH_SHORT).show()
-        }
-
-        override fun onCancelled(databaseError: DatabaseError) {
-            Log.e("Error", "onCancelled: Failed to read user!")
-            Toast.makeText(this@SettingsActivity, "Profile Failed To Update", Toast.LENGTH_SHORT).show()
-        }
-    }
-
-    dbPrivateReferences!!.userReference.child(uid!!).addListenerForSingleValueEvent(updateListener)
-}
-*/
 

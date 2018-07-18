@@ -6,23 +6,29 @@ import android.text.TextUtils
 import android.util.Log
 import android.widget.EditText
 import android.widget.Toast
+import com.communal_solutions.www.communalsolutions.HelperFiles.DBReferences
+import com.communal_solutions.www.communalsolutions.HelperFiles.DBValues
 import com.communal_solutions.www.communalsolutions.HelperFiles.Profile
 import com.communal_solutions.www.communalsolutions.R
 import com.google.firebase.database.*
 
 class SettingsManager(intent: Intent) {
-    // Fill profile object
-    private val dbManager = DatabaseManager()
-    private var profile: Profile = Profile(
-            intent.getStringExtra("display_name"),
-            intent.getStringExtra("user_name"),
-            intent.getStringExtra("phone_number"),
-            intent.getStringExtra("email"),
-            dbManager.uuid
-    )
 
-    // Reset the profile object
-    fun setProfile(profile: Profile) { this.profile = profile }
+    val dbValues = DBValues()
+    val dbReferences = DBReferences()
+
+    // Fill profile object
+    var profile: Profile
+
+    init {
+        profile = Profile(
+                intent.getStringExtra("display_name"),
+                intent.getStringExtra("user_name"),
+                intent.getStringExtra("phone_number"),
+                intent.getStringExtra("email"),
+                dbValues.uuid
+        )
+    }
 
     fun updateProfile(context: Context, vararg editTexts: EditText) {
         val editTextArrayList: ArrayList<EditText> = ArrayList()
@@ -32,20 +38,19 @@ class SettingsManager(intent: Intent) {
         val displayName = editTextArrayList[0].text.toString()
         var phoneNum = editTextArrayList[1].text.toString()
         val username = editTextArrayList[2].text.toString()
-        val email = dbManager.cUser!!.email
+        val email = dbValues.user!!.email
 
         // Validate Phone Number
         phoneNum = validateNumber(phoneNum)
-        if (TextUtils.isEmpty(phoneNum)) editTextArrayList[1].setError("InvalidNumber")
+        if (TextUtils.isEmpty(phoneNum)) editTextArrayList[1].error = "InvalidNumber"
 
         // initilize Profile object
-        profile = Profile(displayName, username, phoneNum, email!!, dbManager.uuid)
-        //contactList = contactManager.getContacts()
+        profile = Profile(displayName, username, phoneNum, email!!, dbValues.uuid)
 
         // push data to database
         val updateListener = object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
-                dbManager.writeProfileData(profile)
+                dbReferences.userReference.setValue(profile)
                 Toast.makeText(context, "Profile Updated", Toast.LENGTH_SHORT).show()
             }
 
@@ -55,7 +60,7 @@ class SettingsManager(intent: Intent) {
             }
         }
 
-        dbManager.getReference("users")!!.addListenerForSingleValueEvent(updateListener)
+        dbReferences.userReference.addListenerForSingleValueEvent(updateListener)
     }
 
     // Initializes EditText values

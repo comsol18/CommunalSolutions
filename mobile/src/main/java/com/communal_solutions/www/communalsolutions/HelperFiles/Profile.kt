@@ -8,19 +8,18 @@ class Profile() {
     var user_name: String = ""
     var cell_number: String = ""
     var email_address: String = ""
-    var uuid: Int = 0
+    var uuid: String = ""
         private set
-    //private val status: String = ""
 
     constructor(profile: String): this() {
         profile_name = getToStringValue("profile_name", profile)
         user_name = getToStringValue("user_name", profile)
         cell_number = getToStringValue("cell_number", profile)
         email_address = getToStringValue("email_address", profile)
-        uuid = Integer.parseInt(getToStringValue("uuid", profile))
+        uuid = getToStringValue("uuid", profile)
     }
 
-    constructor(profile: String, user: String, cell: String, email: String, uuid: Int): this() {
+    constructor(profile: String, user: String, cell: String, email: String, uuid: String): this() {
         profile_name = profile
         user_name = user
         cell_number = cell

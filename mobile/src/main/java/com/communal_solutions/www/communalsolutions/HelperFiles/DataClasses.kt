@@ -1,14 +1,25 @@
 package com.communal_solutions.www.communalsolutions.HelperFiles
 
-import android.provider.ContactsContract
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 
-data class DBPrivateReferences(
-        val dbPrivate: DatabaseReference? = null,
-        val userReference: DatabaseReference = dbPrivate!!.child("users"),
-        val locReference: DatabaseReference = dbPrivate!!.child("locations"),
-        val contactsReference: DatabaseReference = dbPrivate!!.child("contacts")
+data class DBValues(
+        val database: FirebaseDatabase = FirebaseDatabase.getInstance(),
+        val reference: DatabaseReference = database.reference,
+        val private: DatabaseReference = reference.child("private"),
+        val public: DatabaseReference = reference.child("public"),
+        val user: FirebaseUser? = FirebaseAuth.getInstance().currentUser,
+        val uuid: String = user!!.uid.hashCode().toString()
+)
+
+data class DBReferences(
+        val database: DBValues = DBValues(),
+        val userReference: DatabaseReference = database.private.child("users/${database.uuid}"),
+        val locReference: DatabaseReference = database.private.child("locations/${database.uuid}"),
+        val contactsReference: DatabaseReference = database.private.child("contacts/${database.uuid}"),
+        val debugReference: DatabaseReference = database.private.child("debug/${database.uuid}")
 )
 
 data class DBPublicReferences(

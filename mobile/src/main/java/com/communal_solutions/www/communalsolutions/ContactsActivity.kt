@@ -1,8 +1,10 @@
 package com.communal_solutions.www.communalsolutions
 
 import android.app.Activity
+import android.database.Cursor
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.provider.ContactsContract
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.Log
@@ -18,33 +20,45 @@ class ContactsActivity : AppCompatActivity() {
     private val TAG = "ContactsActivity"
     private lateinit var recyclerView: RecyclerView
     private lateinit var mAdapter: ContactsAdapter
-    private var sampleContacts: ArrayList<Contact> = ArrayList()
+    private var contacts: ArrayList<Contact> = ArrayList()
+
+    private fun initList() {
+        val cursor: Cursor = this.contentResolver.query(
+                ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
+                null, null, null,
+                ContactsContract.Contacts.DISPLAY_NAME
+        )
+
+        cursor.moveToFirst()
+        contacts.add(Contact("dummy", "dummy"))
+
+        while (cursor.moveToNext()) {
+            contacts.add(
+                Contact(
+                    cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME)),
+                    cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER))
+                )
+            )
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_contacts)
 
-        sampleContacts.clear()
-        dLog(TAG, "Creating Sample Contacts")
-        for (x in 0..3) {
-            val number = "+$x-555-555-5555"
-            val contact = Contact("Name $x", number)
-            sampleContacts.add(contact)
-            dLog(TAG, formatObject(contact.toString()))
-        }
-
+        initList()
         initRecyclerView()
     }
 
     private fun initRecyclerView() {
-        dLog(TAG, "Initializing RecyclerView")
+        // dLog(TAG, "Initializing RecyclerView")
         recyclerView = recycler_view
         val linearLayoutManager = LinearLayoutManager(this)
         recyclerView.layoutManager = linearLayoutManager
-        mAdapter = ContactsAdapter(this, sampleContacts as List<Contact>, this)
-        dLog(TAG, "mAdapter Created = $mAdapter")
+        mAdapter = ContactsAdapter(this, contacts as List<Contact>, this)
+        // dLog(TAG, "mAdapter Created = $mAdapter")
         recyclerView.adapter = mAdapter
-        dLog(TAG, "Adapter Attached = ${recyclerView.adapter != null}")
+        // dLog(TAG, "Adapter Attached = ${recyclerView.adapter != null}")
         recyclerView.setHasFixedSize(true)
     }
 }

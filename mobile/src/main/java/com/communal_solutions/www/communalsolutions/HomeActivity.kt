@@ -25,12 +25,12 @@ import com.communal_solutions.www.communalsolutions.HelperFiles.*
 
 class HomeActivity : AppCompatActivity(), OnMapReadyCallback {
 
+    // Database References
+    private val dbValues = DBValues()
+    private val dbReferences = DBReferences()
+
     private var mDrawerToggle: ActionBarDrawerToggle? = null
     private var drawer_layout: DrawerLayout? = null
-    private val db = FirebaseDatabase.getInstance()
-    private val cUser = FirebaseAuth.getInstance().currentUser
-    private val userReference = db.getReference("users")
-    private val uid = cUser!!.uid.hashCode().toString()
     private var profileListener: ValueEventListener? = null
     private var passProfile: Profile? = null
     private lateinit var mMap: GoogleMap
@@ -68,16 +68,12 @@ class HomeActivity : AppCompatActivity(), OnMapReadyCallback {
 
         // for straight to settings
         //loadSettings()
-    }
-
-    override fun onStart() {
-        super.onStart()
 
         val profileListener = object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 // if dataSnapshot exists
                 if (dataSnapshot.exists()) {
-                    val profile = dataSnapshot.child("private").child("users").child(uid).getValue(Profile::class.java)
+                    val profile = dataSnapshot.getValue(Profile::class.java)
                     dLog("HomeActivity.profileListener", "profileIsNull=${profile==null}")
                     passProfile = profile
                 } else eLog("HomeActivity.profileListener", "dataSnapshot DNE")
@@ -89,7 +85,7 @@ class HomeActivity : AppCompatActivity(), OnMapReadyCallback {
         }
 
         // add listener to reference
-        userReference.addValueEventListener(profileListener)
+        dbReferences.userReference.addValueEventListener(profileListener)
         this.profileListener = profileListener
     }
 
@@ -185,25 +181,22 @@ class HomeActivity : AppCompatActivity(), OnMapReadyCallback {
 
     @Synchronized private fun loadSettings() {
         val settingsIntent = Intent(this, SettingsActivity::class.java)
-        val hashCode: Int = cUser!!.uid.hashCode()
         if (passProfile != null) {
             settingsIntent.putExtra("display_name", passProfile!!.profile_name)
             settingsIntent.putExtra("email", passProfile!!.email_address)
             settingsIntent.putExtra("user_name", passProfile!!.user_name)
             settingsIntent.putExtra("phone_number", getUserNumber())
-            //settingsIntent.putExtra("status", passProfile!!.status)
         } else {
-            settingsIntent.putExtra("display_name", "random_profile_name${Math.abs(hashCode.hashCode())}")
-            settingsIntent.putExtra("email", cUser.email)
-            settingsIntent.putExtra("user_name", cUser.email!!.substringBefore('@', ""))
+            settingsIntent.putExtra("display_name", "random_profile_name${Math.abs(dbValues.uuid.hashCode())}")
+            settingsIntent.putExtra("email", dbValues.user!!.email)
+            settingsIntent.putExtra("user_name", dbValues.user.email!!.substringBefore('@', ""))
             settingsIntent.putExtra("phone_number", getUserNumber())
-            //settingsIntent.putExtra("status", "")
         }
         startActivity(settingsIntent)
     }
 
     fun logout() {
-        userReference.removeEventListener(profileListener!!)
+        dbReferences.userReference.removeEventListener(profileListener!!)
         FirebaseAuth.getInstance().signOut()
         super.finish()
     }
