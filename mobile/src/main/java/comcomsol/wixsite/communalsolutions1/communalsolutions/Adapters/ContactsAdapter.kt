@@ -17,7 +17,7 @@ import com.amulyakhare.textdrawable.TextDrawable
 import com.amulyakhare.textdrawable.util.ColorGenerator
 import com.squareup.picasso.Picasso
 
-class ContactsAdapter(private val contactList: List<Contact>) : RecyclerView.Adapter<ContactsAdapter.ViewHolder>(), Filterable {
+class ContactsAdapter(private val contactList: List<Contact>, private val listener: ContactsAdapter.ContactListener) : RecyclerView.Adapter<ContactsAdapter.ViewHolder>(), Filterable {
     private val TAG = "ContactsAdapter"
     private var contactListFiltered: List<Contact>
 
@@ -86,10 +86,20 @@ class ContactsAdapter(private val contactList: List<Contact>) : RecyclerView.Ada
             contactName = itemView.findViewById(R.id.name)
             contactPhone = itemView.findViewById(R.id.phone)
             // dLog(TAG, formatObject(toString()))
+
+            itemView.setOnClickListener {
+                val contact = Contact(contactName.text.toString(), contactPhone.text.toString())
+                dLog(TAG, contact.toString())
+                listener.onContactSelected(contact)
+            }
         }
 
         override fun toString(): String {
             return "ViewHolder(contactName=$contactName, contactPhone=$contactPhone)"
         }
+    }
+
+    interface ContactListener {
+        fun onContactSelected(contact: Contact)
     }
 }

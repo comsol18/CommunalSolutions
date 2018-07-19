@@ -8,6 +8,7 @@ import android.Manifest
 import android.content.Context
 import android.content.Context.*
 import android.content.Intent
+import android.net.Uri
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.Toolbar
@@ -17,11 +18,11 @@ import android.view.View
 import android.widget.*
 import comcomsol.wixsite.communalsolutions1.communalsolutions.HelperFiles.*
 import com.google.firebase.database.*
+import comcomsol.wixsite.communalsolutions1.communalsolutions.Adapters.ContactsAdapter
 import comcomsol.wixsite.communalsolutions1.communalsolutions.Managers.*
 import kotlinx.android.synthetic.main.activity_settings.*
 
 class SettingsActivity : AppCompatActivity() {
-
     private val TAG = "SettingsActivity"
 
     // Database References
@@ -71,15 +72,16 @@ class SettingsActivity : AppCompatActivity() {
                 contact1, contact2, contact3, contact4, contact5, contact6 -> {
                     view.setOnClickListener {
                         val contactsIntent = Intent(this, ContactsActivity::class.java)
-                        when (view) {
-                            contact1 -> contactsIntent.putExtra("ContactNumber", 1)
-                            contact2 -> contactsIntent.putExtra("ContactNumber", 2)
-                            contact3 -> contactsIntent.putExtra("ContactNumber", 3)
-                            contact4 -> contactsIntent.putExtra("ContactNumber", 4)
-                            contact5 -> contactsIntent.putExtra("ContactNumber", 5)
-                            else -> contactsIntent.putExtra("ContactNumber", 6)
+                        val requestCode = when (view) {
+                            contact1 -> 1
+                            contact2 -> 2
+                            contact3 -> 3
+                            contact4 -> 4
+                            contact5 -> 5
+                            else -> 6
                         }
-                        startActivity(contactsIntent)
+                        contactsIntent.putExtra("RequestCode", requestCode.toString())
+                        startActivityForResult(contactsIntent, requestCode)
                     }
                 }
                 saveSettings -> {
@@ -91,6 +93,21 @@ class SettingsActivity : AppCompatActivity() {
                 else -> {}
             }
         }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        val returnContact = data!!.getParcelableExtra<Contact>("ContactSelected")
+        when (requestCode) {
+            1 -> sManager.contactList.contact1 = returnContact
+            2 -> sManager.contactList.contact2 = returnContact
+            3 -> sManager.contactList.contact3 = returnContact
+            4 -> sManager.contactList.contact4 = returnContact
+            5 -> sManager.contactList.contact5 = returnContact
+            6 -> sManager.contactList.contact6 = returnContact
+        }
+        sManager.initEmergencyContacts(arrayListOf(contact1, contact2, contact3, contact4, contact5, contact6))
+        sManager.updateContacts(this)
     }
 
     private fun configureToolbar() {
@@ -212,10 +229,11 @@ class SettingsActivity : AppCompatActivity() {
     }
 
     override fun onStop() {
-        super.onStop()
         //remove the listener
         dbReferences.userReference.removeEventListener(profileListener!!)
         dbReferences.contactsReference.removeEventListener(contactsListener!!)
+        super.onStop()
     }
+
 }
 

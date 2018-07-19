@@ -1,8 +1,16 @@
 package comcomsol.wixsite.communalsolutions1.communalsolutions.HelperFiles
 
-class Contact() {
+import android.os.Parcel
+import android.os.Parcelable
+
+class Contact(): Parcelable {
     var cName: String = "No Contact"
     var cPhoneNum: String = "No Number"
+
+    constructor(parcel: Parcel) : this() {
+        cName = parcel.readString()
+        cPhoneNum = parcel.readString()
+    }
 
     constructor(name: String, phone: String) : this() {
         cName = name
@@ -11,5 +19,24 @@ class Contact() {
 
     override fun toString(): String {
         return "Contact(cName='$cName', cPhoneNum='$cPhoneNum')"
+    }
+
+    override fun writeToParcel(parcel: Parcel, flags: Int) {
+        parcel.writeString(cName)
+        parcel.writeString(cPhoneNum)
+    }
+
+    override fun describeContents(): Int {
+        return 0
+    }
+
+    companion object CREATOR : Parcelable.Creator<Contact> {
+        override fun createFromParcel(parcel: Parcel): Contact {
+            return Contact(parcel)
+        }
+
+        override fun newArray(size: Int): Array<Contact?> {
+            return arrayOfNulls(size)
+        }
     }
 }

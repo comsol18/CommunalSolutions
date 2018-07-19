@@ -3,6 +3,7 @@ package comcomsol.wixsite.communalsolutions1.communalsolutions
 import android.app.Activity
 import android.app.SearchManager
 import android.content.Context
+import android.content.Intent
 import android.database.Cursor
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
@@ -12,6 +13,7 @@ import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.SearchView
 import android.util.Log
 import android.view.Menu
+import android.view.MenuItem
 import android.widget.Toast
 import android.widget.Toolbar
 import comcomsol.wixsite.communalsolutions1.communalsolutions.Adapters.ContactsAdapter
@@ -19,13 +21,13 @@ import comcomsol.wixsite.communalsolutions1.communalsolutions.HelperFiles.*
 import kotlinx.android.synthetic.main.activity_contacts.*
 import java.util.*
 
-class ContactsActivity : AppCompatActivity() {
-
+class ContactsActivity : AppCompatActivity(), ContactsAdapter.ContactListener {
     private val TAG = "ContactsActivity"
     private lateinit var recyclerView: RecyclerView
     private lateinit var mAdapter: ContactsAdapter
     private var contacts: ArrayList<Contact> = ArrayList()
     private var searchView: SearchView? = null
+    private var requestCode = 0
 
     private fun initList() {
         val cursor: Cursor = this.contentResolver.query(
@@ -51,6 +53,7 @@ class ContactsActivity : AppCompatActivity() {
         setContentView(R.layout.activity_contacts)
 
         setSupportActionBar(contactsSearch)
+        requestCode = Integer.parseInt(intent.getStringExtra("RequestCode"))
 
         // toolbar fancy stuff
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
@@ -92,8 +95,15 @@ class ContactsActivity : AppCompatActivity() {
         recyclerView = recycler_view
         val linearLayoutManager = LinearLayoutManager(this)
         recyclerView.layoutManager = linearLayoutManager
-        mAdapter = ContactsAdapter(contacts as List<Contact>)
+        mAdapter = ContactsAdapter(contacts as List<Contact>, this)
         recyclerView.adapter = mAdapter
         recyclerView.setHasFixedSize(true)
+    }
+
+    override fun onContactSelected(contact: Contact) {
+        val returnIntent = Intent()
+        returnIntent.putExtra("ContactSelected", contact)
+        setResult(requestCode, returnIntent)
+        finish()
     }
 }
