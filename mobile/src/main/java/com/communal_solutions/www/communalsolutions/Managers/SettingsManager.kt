@@ -1,51 +1,40 @@
 package com.communal_solutions.www.communalsolutions.Managers
 
 import android.content.Context
-import android.content.Intent
 import android.text.TextUtils
 import android.util.Log
+import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
-import com.communal_solutions.www.communalsolutions.HelperFiles.DBReferences
-import com.communal_solutions.www.communalsolutions.HelperFiles.DBValues
-import com.communal_solutions.www.communalsolutions.HelperFiles.Profile
+import com.communal_solutions.www.communalsolutions.HelperFiles.*
 import com.communal_solutions.www.communalsolutions.R
+import com.communal_solutions.www.communalsolutions.R.id.*
 import com.google.firebase.database.*
 
-class SettingsManager(intent: Intent) {
+class SettingsManager() {
 
     val dbValues = DBValues()
     val dbReferences = DBReferences()
 
     // Fill profile object
-    var profile: Profile
+    var profile: Profile = Profile()
+    var contactList: ContactList = ContactList()
 
-    init {
-        profile = Profile(
-                intent.getStringExtra("display_name"),
-                intent.getStringExtra("user_name"),
-                intent.getStringExtra("phone_number"),
-                intent.getStringExtra("email"),
-                dbValues.uuid
-        )
+    constructor(getNumber: () -> String): this() {
+        profile = Profile(dbValues, getNumber())
     }
 
-    fun updateProfile(context: Context, vararg editTexts: EditText) {
-        val editTextArrayList: ArrayList<EditText> = ArrayList()
-        for (editText in editTexts) {
-            editTextArrayList.add(editText)
-        }
-        val displayName = editTextArrayList[0].text.toString()
-        var phoneNum = editTextArrayList[1].text.toString()
-        val username = editTextArrayList[2].text.toString()
-        val email = dbValues.user!!.email
+    fun updateProfile(context: Context, name: EditText, number: EditText, uname: EditText) {
+        val displayName = name.text.toString()
+        val cellNumber= number.text.toString()
+        val userName = uname.text.toString()
 
         // Validate Phone Number
-        phoneNum = validateNumber(phoneNum)
-        if (TextUtils.isEmpty(phoneNum)) editTextArrayList[1].error = "InvalidNumber"
+        val phoneNum = validateNumber(cellNumber)
+        if (TextUtils.isEmpty(phoneNum)) number.error = "InvalidNumber"
 
         // initilize Profile object
-        profile = Profile(displayName, username, phoneNum, email!!, dbValues.uuid)
+        profile = Profile(dbValues, displayName, userName, phoneNum)
 
         // push data to database
         val updateListener = object : ValueEventListener {
@@ -63,6 +52,23 @@ class SettingsManager(intent: Intent) {
         dbReferences.userReference.addListenerForSingleValueEvent(updateListener)
     }
 
+    fun updateContacts(context: Context) {
+        // push data to database
+        val updateListener = object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                dbReferences.contactsReference.setValue(contactList)
+                Toast.makeText(context, "Emergency Contacts Updated", Toast.LENGTH_SHORT).show()
+            }
+
+            override fun onCancelled(databaseError: DatabaseError) {
+                Log.e("Error", "onCancelled: Failed to read user!")
+                Toast.makeText(context, "Emergency Contacts Failed To Update", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        dbReferences.contactsReference.addListenerForSingleValueEvent(updateListener)
+    }
+
     // Initializes EditText values
     fun initEditTexts(vararg editTexts: EditText) {
         var text: String
@@ -76,6 +82,20 @@ class SettingsManager(intent: Intent) {
                         else -> ""
                     }
             editText.setText(text)
+        }
+    }
+
+    fun initEmergencyContacts(buttons: ArrayList<Button>) {
+        for (button in buttons) {
+            button.text = when (button.id) {
+                contact1 -> contactList.contact1.cName
+                contact2 -> contactList.contact2.cName
+                contact3 -> contactList.contact3.cName
+                contact4 -> contactList.contact4.cName
+                contact5 -> contactList.contact5.cName
+                contact6 -> contactList.contact6.cName
+                else -> "No Contact"
+            }
         }
     }
 

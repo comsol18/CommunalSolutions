@@ -25,14 +25,8 @@ import com.communal_solutions.www.communalsolutions.HelperFiles.*
 
 class HomeActivity : AppCompatActivity(), OnMapReadyCallback {
 
-    // Database References
-    private val dbValues = DBValues()
-    private val dbReferences = DBReferences()
-
     private var mDrawerToggle: ActionBarDrawerToggle? = null
     private var drawer_layout: DrawerLayout? = null
-    private var profileListener: ValueEventListener? = null
-    private var passProfile: Profile? = null
     private lateinit var mMap: GoogleMap
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -65,28 +59,6 @@ class HomeActivity : AppCompatActivity(), OnMapReadyCallback {
         }
 
         drawer_layout!!.setDrawerListener(mDrawerToggle)
-
-        // for straight to settings
-        //loadSettings()
-
-        val profileListener = object : ValueEventListener {
-            override fun onDataChange(dataSnapshot: DataSnapshot) {
-                // if dataSnapshot exists
-                if (dataSnapshot.exists()) {
-                    val profile = dataSnapshot.getValue(Profile::class.java)
-                    dLog("HomeActivity.profileListener", "profileIsNull=${profile==null}")
-                    passProfile = profile
-                } else eLog("HomeActivity.profileListener", "dataSnapshot DNE")
-            }
-
-            override fun onCancelled(databaseError: DatabaseError) {
-                Toast.makeText(this@HomeActivity, "Error: Failed to read user data", Toast.LENGTH_LONG).show()
-            }
-        }
-
-        // add listener to reference
-        dbReferences.userReference.addValueEventListener(profileListener)
-        this.profileListener = profileListener
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
@@ -154,49 +126,12 @@ class HomeActivity : AppCompatActivity(), OnMapReadyCallback {
         }
     }
 
-    private fun getUserNumber(): String {
-        val phoneMgr = getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
-        try {
-            var number: String = phoneMgr.line1Number
-            number = if (number.length == 11) number.substring(1)  else number
-            return number.substring(0, 3) + "-" + number.substring(3, 6) + "-" + number.substring(6)
-        } catch (e: SecurityException) {
-            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
-                val MY_PERMISSIONS_REQUEST = 9002
-                ActivityCompat.requestPermissions(this@HomeActivity,
-                        arrayOf(Manifest.permission.READ_PHONE_STATE),
-                        MY_PERMISSIONS_REQUEST)
-            }
-            try {
-                var number: String = phoneMgr.line1Number
-                number = if (number.length == 11) number.substring(1)  else number
-                return number.substring(0, 3) + "-" + number.substring(3, 6) + "-" + number.substring(6)
-            } catch (ex: SecurityException) {
-                Toast.makeText(this, "Phone Permissions not granted", Toast.LENGTH_SHORT).show()
-                Log.e("getUserNumber", ex.toString())
-                return ""
-            }
-        }
-    }
-
-    @Synchronized private fun loadSettings() {
+    private fun loadSettings() {
         val settingsIntent = Intent(this, SettingsActivity::class.java)
-        if (passProfile != null) {
-            settingsIntent.putExtra("display_name", passProfile!!.profile_name)
-            settingsIntent.putExtra("email", passProfile!!.email_address)
-            settingsIntent.putExtra("user_name", passProfile!!.user_name)
-            settingsIntent.putExtra("phone_number", getUserNumber())
-        } else {
-            settingsIntent.putExtra("display_name", "random_profile_name${Math.abs(dbValues.uuid.hashCode())}")
-            settingsIntent.putExtra("email", dbValues.user!!.email)
-            settingsIntent.putExtra("user_name", dbValues.user.email!!.substringBefore('@', ""))
-            settingsIntent.putExtra("phone_number", getUserNumber())
-        }
         startActivity(settingsIntent)
     }
 
     fun logout() {
-        dbReferences.userReference.removeEventListener(profileListener!!)
         FirebaseAuth.getInstance().signOut()
         super.finish()
     }
