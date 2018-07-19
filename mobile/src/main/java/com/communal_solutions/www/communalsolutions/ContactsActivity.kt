@@ -13,6 +13,7 @@ import android.support.v7.widget.SearchView
 import android.util.Log
 import android.view.Menu
 import android.widget.Toast
+import android.widget.Toolbar
 import com.communal_solutions.www.communalsolutions.Adapters.ContactsAdapter
 import com.communal_solutions.www.communalsolutions.HelperFiles.*
 import kotlinx.android.synthetic.main.activity_contacts.*
@@ -34,7 +35,6 @@ class ContactsActivity : AppCompatActivity() {
         )
 
         cursor.moveToFirst()
-        contacts.add(Contact("I", "I"))
 
         while (cursor.moveToNext()) {
             contacts.add(
@@ -49,6 +49,12 @@ class ContactsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_contacts)
+
+        setSupportActionBar(contactsSearch)
+
+        // toolbar fancy stuff
+        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+        supportActionBar!!.setTitle(R.string.search_title)
 
         initList()
         initRecyclerView()

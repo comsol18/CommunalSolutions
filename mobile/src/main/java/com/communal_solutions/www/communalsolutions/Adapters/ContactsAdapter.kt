@@ -54,7 +54,7 @@ class ContactsAdapter(private val contactList: List<Contact>) : RecyclerView.Ada
     }
 
     override fun getItemCount(): Int {
-        return contactList.size
+        return contactListFiltered.size
     }
 
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): ViewHolder? {
@@ -64,7 +64,7 @@ class ContactsAdapter(private val contactList: List<Contact>) : RecyclerView.Ada
     }
 
     override fun onBindViewHolder(holder: ViewHolder?, position: Int) {
-        val contact = contactList[position]
+        val contact = contactListFiltered[position]
         try {
             holder!!.contactName.text = contact.cName
             holder.contactPhone.text = contact.cPhoneNum
