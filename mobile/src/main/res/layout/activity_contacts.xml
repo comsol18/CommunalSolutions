@@ -14,15 +14,13 @@
         android:theme="@style/AppTheme.AppBarOverlay">
 
         <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
+            android:id="@+id/contactsSearch"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="@android:color/white"
             app:popupTheme="@style/AppTheme.PopupOverlay" />
 
     </android.support.design.widget.AppBarLayout>
-
-    <!--<include layout="@layout/content_contacts" />-->
 
     <RelativeLayout
         app:layout_constraintTop_toBottomOf="@+id/appBarLayout"
@@ -40,4 +38,5 @@
             android:scrollbars="vertical" />
 
     </RelativeLayout>
+
 </android.support.constraint.ConstraintLayout>

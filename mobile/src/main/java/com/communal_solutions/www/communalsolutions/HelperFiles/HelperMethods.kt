@@ -12,3 +12,25 @@ fun dLog(tag: String, msg: String) {
     Thread.sleep(1)
 }
 
+fun formatObject(obj: String): String {
+    val name = obj.substringBefore('(')
+    val lead = "$name Object"
+    val values: ArrayList<String> = ArrayList()
+
+    var str = obj.substringAfter('(')
+    while (true) {
+        if (str.contains(", ")) {
+            values.add(str.substringBefore(", "))
+            str = str.substringAfter(", ")
+        } else {
+            values.add(str.substringBefore(')'))
+            break
+        }
+    }
+
+    var result = "$lead\n$name("
+    for (value in values) { result += "\n\t$value" }
+    result += "\n)"
+    return result
+}
+
