@@ -13,7 +13,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.GoogleAuthProvider
-import comcomsol.wixsite.communalsolutions1.communalsolutions.HelperFiles.eLog
+import comcomsol.wixsite.communalsolutions1.communalsolutions.HelperFiles.*
 import kotlinx.android.synthetic.main.activity_main.*
 import comcomsol.wixsite.communalsolutions1.communalsolutions.Managers.*
 
@@ -67,7 +67,7 @@ class MainActivity : AppCompatActivity() {
                         updateUI(user)
                     } else {
                         // If sign in fails, display a message to the user.
-                        Log.w("Warning", "signInWithCredential:failure", task.exception)
+                        eLog(TAG, task.exception.toString())
                         Toast.makeText(this, "Login Failed: firebaseAuthWithGoogle", Toast.LENGTH_SHORT).show()
                     }
                 }
@@ -86,7 +86,7 @@ class MainActivity : AppCompatActivity() {
                     .addOnCompleteListener(this) { task ->
                         if (task.isSuccessful) {
                             // Registration Completes
-                            Log.d("Info", "signInWithEmailAndPassword:success")
+                            dLog("Info", "signInWithEmailAndPassword:success")
                             //Toast.makeText(this, "Login Success", Toast.LENGTH_SHORT).show()
                             val user: FirebaseUser? = auth.mAuth!!.currentUser
                             updateUI(user)
@@ -97,7 +97,7 @@ class MainActivity : AppCompatActivity() {
                                     .addOnCompleteListener(this) { task ->
                                         if (task.isSuccessful) {
                                             // Registration Completes
-                                            Log.d("Info", "createUserWithEmail:success")
+                                            dLog("Info", "createUserWithEmail:success")
                                             val user: FirebaseUser? = auth.mAuth!!.currentUser
                                             updateUI(user)
                                         } else {
