@@ -8,58 +8,6 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:1019793408847:android:2e9b8d04b3bf0395",
-        "android_client_info": {
-          "package_name": "com.communal_solutions.www.communalsolutions"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "1019793408847-n7liv4poh59g4v26r8vdnmicp68puh2d.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.communal_solutions.www.communalsolutions",
-            "certificate_hash": "95b2270591e26874041db96013dff389dac305e3"
-          }
-        },
-        {
-          "client_id": "1019793408847-pvfi6v6scnahbr4emnr7edbjfr2l770v.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.communal_solutions.www.communalsolutions",
-            "certificate_hash": "bb4ba552918f080b9988c4ee5625d6e95067f609"
-          }
-        },
-        {
-          "client_id": "1019793408847-3qfb4g8nc38nu6dj72kki0l4k89tbain.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyCL1G6Q3fQxNGjTtalx5aVFP5MLY1mhs94"
-        }
-      ],
-      "services": {
-        "analytics_service": {
-          "status": 1
-        },
-        "appinvite_service": {
-          "status": 2,
-          "other_platform_oauth_client": [
-            {
-              "client_id": "1019793408847-3qfb4g8nc38nu6dj72kki0l4k89tbain.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
-        },
-        "ads_service": {
-          "status": 2
-        }
-      }
-    },
-    {
-      "client_info": {
         "mobilesdk_app_id": "1:1019793408847:android:4a3d9037d145a0ca",
         "android_client_info": {
           "package_name": "comcomsol.wixsite.communalsolutions1.communalsolutions"
@@ -67,7 +15,15 @@
       },
       "oauth_client": [
         {
-          "client_id": "1019793408847-kcm0vbf20lu2iatb1ok5tjjte655kk6j.apps.googleusercontent.com",
+          "client_id": "1019793408847-j8psvn68pm8bb6hobedi43jivlvl7s9t.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "comcomsol.wixsite.communalsolutions1.communalsolutions",
+            "certificate_hash": "bb4ba552918f080b9988c4ee5625d6e95067f609"
+          }
+        },
+        {
+          "client_id": "1019793408847-8tknk596qhivj3ninqife60hlphop4sj.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "comcomsol.wixsite.communalsolutions1.communalsolutions",
@@ -75,13 +31,29 @@
           }
         },
         {
-          "client_id": "1019793408847-3qfb4g8nc38nu6dj72kki0l4k89tbain.apps.googleusercontent.com",
+          "client_id": "1019793408847-7vtje0bs9jng1in6sah60lfpht9jf3gq.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "comcomsol.wixsite.communalsolutions1.communalsolutions",
+            "certificate_hash": "1977f0c7fb1b0503025578811d6fbb582850ff9d"
+          }
+        },
+        {
+          "client_id": "1019793408847-21f6o51g7r2caijf5be03s6aeded892l.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "comcomsol.wixsite.communalsolutions1.communalsolutions",
+            "certificate_hash": "f0b6a3d48e0428cad6b0a1367e6585304564daf8"
+          }
+        },
+        {
+          "client_id": "1019793408847-jm13mallql3msf24c03s1gdahgu5cvmc.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyCL1G6Q3fQxNGjTtalx5aVFP5MLY1mhs94"
+          "current_key": "AIzaSyA77G6gYSKqSFwvoDv5I5WaOgdoW2nJcXA"
         }
       ],
       "services": {
@@ -92,7 +64,7 @@
           "status": 2,
           "other_platform_oauth_client": [
             {
-              "client_id": "1019793408847-3qfb4g8nc38nu6dj72kki0l4k89tbain.apps.googleusercontent.com",
+              "client_id": "1019793408847-jm13mallql3msf24c03s1gdahgu5cvmc.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
