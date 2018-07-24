@@ -13,6 +13,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.GoogleAuthProvider
+import comcomsol.wixsite.communalsolutions1.communalsolutions.HelperFiles.eLog
 import kotlinx.android.synthetic.main.activity_main.*
 import comcomsol.wixsite.communalsolutions1.communalsolutions.Managers.*
 
@@ -20,6 +21,7 @@ import comcomsol.wixsite.communalsolutions1.communalsolutions.Managers.*
 class MainActivity : AppCompatActivity() {
 
     // Class Variables
+    private val TAG = "MainActivity"
     private val auth: AuthManager = AuthManager()
     private var signInClient: GoogleSignInClient? = null
     private val RC_SIGN_IN = 9001
@@ -46,6 +48,7 @@ class MainActivity : AppCompatActivity() {
                 val account: GoogleSignInAccount = task.getResult(ApiException::class.java)
                 firebaseAuthWithGoogle(account)
             } catch (e: ApiException) {
+                eLog(TAG, e.toString())
                 Log.w("Warning", "Google sign in failed", e)
                 Toast.makeText(this, "Login Failed: onActivityResult", Toast.LENGTH_SHORT).show()
             }
