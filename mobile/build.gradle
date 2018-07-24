@@ -10,8 +10,8 @@ android {
         applicationId "comcomsol.wixsite.communalsolutions1.communalsolutions"
         minSdkVersion 21
         targetSdkVersion 26
-        versionCode 1
-        versionName "1.0"
+        versionCode 8
+        versionName "18.07.19"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
