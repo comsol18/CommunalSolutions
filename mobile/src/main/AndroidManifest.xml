@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.communal_solutions.www.communalsolutions">
+    package="comcomsol.wixsite.communalsolutions1.communalsolutions">
 
     <!-- To auto-complete the email text field in the login form with the user's emails -->
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
@@ -33,7 +33,7 @@
             android:windowSoftInputMode="stateHidden">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.communal_solutions.www.communalsolutions.HomeActivity" />
+                android:value="comcomsol.wixsite.communalsolutions1.communalsolutions.HomeActivity" />
         </activity>
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.

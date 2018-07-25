@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.communal_solutions.www.communalsolutions">
+    package="comcomsol.wixsite.communalsolutions1.communalsolutions">
 
     <uses-feature android:name="android.hardware.type.watch" />
 

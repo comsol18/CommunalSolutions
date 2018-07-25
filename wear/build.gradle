@@ -7,10 +7,10 @@ apply plugin: 'kotlin-android-extensions'
 android {
     compileSdkVersion 26
     defaultConfig {
-        applicationId "com.communal_solutions.www.communalsolutions"
+        applicationId "comcomsol.wixsite.communalsolutions1.communalsolutions"
         minSdkVersion 25
         targetSdkVersion 26
-        versionCode 1
+        versionCode 9
         versionName "1.0"
     }
     buildTypes {

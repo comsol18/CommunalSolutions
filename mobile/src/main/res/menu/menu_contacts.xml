@@ -1,7 +1,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.communal_solutions.www.communalsolutions.TabbedActivity">
+    tools:context="comcomsol.wixsite.communalsolutions1.communalsolutions.TabbedActivity">
     <item
         android:id="@+id/emergency"
         android:orderInCategory="100"

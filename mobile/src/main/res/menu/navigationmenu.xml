@@ -3,21 +3,17 @@
     <item
         android:id="@+id/commInfo"
         android:icon="@android:drawable/ic_dialog_info"
-        android:onClick="onOptionsItemSelected"
         android:title="@string/info" />
     <item
         android:id="@+id/commEvents"
         android:icon="@android:drawable/ic_menu_my_calendar"
-        android:onClick="onOptionsItemSelected"
         android:title="@string/events" />
     <item
         android:id="@+id/settings"
-        android:onClick="onOptionsItemSelected"
         android:icon="@drawable/ic_settings_black_24dp"
         android:title="@string/settings" />
     <item
         android:id="@+id/logOut"
-        android:onClick="onOptionsItemSelected"
         android:icon="@drawable/ic_exit_to_app_black_24dp"
         android:title="@string/logout" />
 </menu>
