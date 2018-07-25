@@ -46,4 +46,8 @@
     <string name="action_settings">Settings</string>
     <string name="section_format">Hello World from section: %1$d</string>
     <string name="title_activity_test">TestActivity</string>
+    <string name="emergency">Emergency Contact Location</string>
+    <string name="hospital">Hospital</string>
+    <string name="police">Police stations</string>
+    <string name="defense">Self Defense class</string>
 </resources>

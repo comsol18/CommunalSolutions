@@ -32,6 +32,10 @@ class HomeActivity : AppCompatActivity(), OnMapReadyCallback {
     private var mDrawerToggle: ActionBarDrawerToggle? = null
     private var drawer_layout: DrawerLayout? = null
     private lateinit var mMap: GoogleMap
+    private var memergency = false;
+    private var mhospital = false;
+    private var mpolice=false;
+    private var mdefense = false;
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -97,7 +101,7 @@ class HomeActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        getMenuInflater().inflate(R.menu.navigationmenu, menu)
+        getMenuInflater().inflate(R.menu.menu_contacts, menu)
         return true
     }
 
@@ -133,6 +137,47 @@ class HomeActivity : AppCompatActivity(), OnMapReadyCallback {
             R.id.commEvents -> {}
             R.id.settings -> loadSettings()
             R.id.logOut -> logout()
+            R.id.emergency->
+                if(item.isChecked()){
+                item.setChecked(false);
+                memergency = false;
+                }
+            else {
+                // If item is unchecked then checked it
+                item.setChecked(true);
+                memergency = true;
+            }
+            R.id.hospital ->
+            if (item.isChecked()) {
+                // If item already checked then unchecked it
+                item.setChecked(false);
+                mhospital = false;
+            } else {
+                // If item is unchecked then checked it
+                item.setChecked(true);
+                mhospital = true;
+            }
+            R.id.police ->
+                if (item.isChecked()) {
+                    // If item already checked then unchecked it
+                    item.setChecked(false);
+                    mpolice = false;
+                } else {
+                    // If item is unchecked then checked it
+                    item.setChecked(true);
+                    mpolice = true;
+                }
+            R.id.defense ->
+                if (item.isChecked()) {
+                    // If item already checked then unchecked it
+                    item.setChecked(false);
+                    mdefense = false;
+                } else {
+                    // If item is unchecked then checked it
+                    item.setChecked(true);
+                    mdefense = true;
+                }
+
         }
         return if (mDrawerToggle!!.onOptionsItemSelected(item)) {
             true

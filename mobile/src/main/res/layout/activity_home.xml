@@ -37,4 +37,19 @@
 
     </android.support.design.widget.NavigationView>
 
+    <LinearLayout
+        android:layout_width="200dp"
+        android:layout_height="100dp"
+        android:layout_marginBottom="30dp"
+        android:gravity="bottom|center"
+        android:paddingBottom="15dp">
+        <ImageView
+            android:id="@+id/btndial"
+            android:layout_width="200dp"
+            android:layout_height="100dp"
+            android:src="@drawable/help"
+            android:layout_marginBottom="15dp"/>
+
+    </LinearLayout>
+
 </android.support.v4.widget.DrawerLayout>
