@@ -14,6 +14,7 @@ import android.support.v4.content.ContextCompat
 import android.support.v7.widget.Toolbar
 import android.telephony.TelephonyManager
 import android.util.Log
+import android.view.MenuItem
 import android.view.View
 import android.widget.*
 import comcomsol.wixsite.communalsolutions1.communalsolutions.HelperFiles.*
@@ -26,11 +27,11 @@ class SettingsActivity : AppCompatActivity() {
     private val TAG = "SettingsActivity"
 
     // Database References
-    private val dbValues = DBValues()
+//    private val dbValues = DBValues()
     private val dbReferences = DBReferences()
 
     // Managers
-    private var locationManager: LocationManager? = null
+//    private var locationManager: LocationManager? = null
     private lateinit var sManager: SettingsManager
 
     // Views
@@ -116,17 +117,23 @@ class SettingsActivity : AppCompatActivity() {
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
     }
 
+/*
     private val locationListener: LocationListener = object : LocationListener {
         override fun onLocationChanged(location: Location) {
+            */
+/*
             val lat: Double = Math.round(location.latitude*1000.0)/1000.0
             val long: Double = Math.round(location.longitude*1000.0)/1000.0
             val userLocation = UserLocation(lat, long, dbValues.uuid)
-            dbReferences.locReference.setValue(userLocation)
+            *//*
+
+            dbReferences.locReference.setValue(location)
         }
         override fun onStatusChanged(provider: String, status: Int, extras: Bundle) {}
         override fun onProviderEnabled(provider: String) {}
         override fun onProviderDisabled(provider: String) {}
     }
+*/
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -142,7 +149,7 @@ class SettingsActivity : AppCompatActivity() {
         configureToolbar()
         toolbarTextView!!.visibility = View.VISIBLE
 
-        locationManager = getSystemService(LOCATION_SERVICE) as LocationManager?
+/*        locationManager = getSystemService(LOCATION_SERVICE) as LocationManager?
         val MY_PERMISSIONS_REQUEST = 9002
 
         try {
@@ -160,7 +167,7 @@ class SettingsActivity : AppCompatActivity() {
         } catch(ex: SecurityException) {
             Log.e("Exception", ex.toString())
             Log.e("myTag", "Security Exception, no location available")
-        }
+        }*/
 
         setOnClickListeners(arrayListOf(contact1, contact2, contact3, contact4, contact5, contact6, saveSettings))
     }
@@ -235,5 +242,14 @@ class SettingsActivity : AppCompatActivity() {
         super.onStop()
     }
 
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            android.R.id.home -> {
+                super.onBackPressed()
+                return true
+            }
+            else -> return false
+        }
+    }
 }
 

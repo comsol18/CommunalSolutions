@@ -30,6 +30,7 @@ class MainActivity : AppCompatActivity() {
     private fun updateUI(user: FirebaseUser?) {
         val homeIntent = Intent(this, HomeActivity::class.java)
         if (user != null) {
+            Toast.makeText(this, "Login Success", Toast.LENGTH_SHORT).show()
             startActivity(homeIntent)
         }
     }

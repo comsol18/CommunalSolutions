@@ -27,12 +27,6 @@ data class DBPublicReferences(
         val dbReference: DatabaseReference = database.reference.child("public")
 )
 
-data class UserLocation(
-        val latitude: Double = 0.0,
-        val longitude: Double = 0.0,
-        var uuid: String = ""
-)
-
 data class ContactList(
         var contact1: Contact = Contact(),
         var contact2: Contact = Contact(),

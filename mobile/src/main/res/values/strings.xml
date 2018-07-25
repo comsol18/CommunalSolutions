@@ -49,4 +49,8 @@
     <string name="action_search">Search</string>
     <string name="search_hint">Type name...</string>
     <string name="search_title">Contacts</string>
+    <string name="title_activity_community_info">CommunityInfoActivity</string>
+    <string name="tab_text_1">Tab 1</string>
+    <string name="tab_text_2">Tab 2</string>
+    <string name="tab_text_3">Tab 3</string>
 </resources>

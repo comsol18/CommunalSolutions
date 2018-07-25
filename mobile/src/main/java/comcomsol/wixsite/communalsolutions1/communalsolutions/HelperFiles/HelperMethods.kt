@@ -1,5 +1,7 @@
 package comcomsol.wixsite.communalsolutions1.communalsolutions.HelperFiles
 
+import android.app.Activity
+import android.support.v4.app.NavUtils
 import android.util.Log
 
 fun eLog(tag: String, msg: String) {
@@ -34,3 +36,6 @@ fun formatObject(obj: String): String {
     return result
 }
 
+fun navigateUp(activity: Activity) {
+    NavUtils.navigateUpTo(activity, NavUtils.getParentActivityIntent(activity))
+}
