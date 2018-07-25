@@ -8,6 +8,7 @@ import android.database.Cursor
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.ContactsContract
+import android.support.v4.app.NavUtils
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.SearchView
@@ -105,5 +106,10 @@ class ContactsActivity : AppCompatActivity(), ContactsAdapter.ContactListener {
         returnIntent.putExtra("ContactSelected", contact)
         setResult(requestCode, returnIntent)
         finish()
+    }
+
+    override fun onBackPressed() {
+        //NavUtils.navigateUpTo(this, NavUtils.getParentActivityIntent(this))
+        navigateUp(this)
     }
 }

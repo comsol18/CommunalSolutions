@@ -12,6 +12,10 @@ import android.support.v4.app.ActivityCompat
 import android.telephony.TelephonyManager
 import android.Manifest
 import android.content.res.Configuration
+import android.location.Location
+import android.location.LocationListener
+import android.location.LocationManager
+import android.support.v4.content.ContextCompat
 import android.support.v4.widget.DrawerLayout
 import android.support.v7.app.ActionBarDrawerToggle
 import android.util.Log
@@ -21,13 +25,20 @@ import android.widget.*
 import com.google.android.gms.maps.*
 import com.google.android.gms.maps.model.*
 import comcomsol.wixsite.communalsolutions1.communalsolutions.HelperFiles.*
+import comcomsol.wixsite.communalsolutions1.communalsolutions.Managers.MapsManager
 
 
 class HomeActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private var mDrawerToggle: ActionBarDrawerToggle? = null
     private var drawer_layout: DrawerLayout? = null
-    private lateinit var mMap: GoogleMap
+
+    // Managers
+    private var mapsManager: MapsManager? = null
+
+    // Database
+    private val dbValues = DBValues()
+    private val dbReferences = DBReferences()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,7 +48,6 @@ class HomeActivity : AppCompatActivity(), OnMapReadyCallback {
                 .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
 
-        Toast.makeText(this, "Login Success", Toast.LENGTH_SHORT).show()
         getPermissions()
 
         configureNavigationDrawer()
@@ -62,12 +72,7 @@ class HomeActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
-        mMap = googleMap
-
-        // Add a marker in Sydney and move the camera
-        val sydney = LatLng(-34.0, 151.0)
-        mMap.addMarker(MarkerOptions().position(sydney).title("Marker in Sydney"))
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(sydney, 15.0f))
+        mapsManager = MapsManager(this, googleMap, this)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -104,10 +109,19 @@ class HomeActivity : AppCompatActivity(), OnMapReadyCallback {
         // the nav drawer indicator touch event
         val itemId: Int = item.itemId
         when (itemId) {
-            R.id.commInfo -> {}
-            R.id.commEvents -> {}
+/*
+            R.id.commInfo -> {
+                val commInfoIntent = Intent(this@HomeActivity, CommunityInfoActivity::class.java)
+                startActivity(commInfoIntent)
+            }
+            R.id.commEvents -> {
+                val commInfoIntent = Intent(this@HomeActivity, CommunityInfoActivity::class.java)
+                startActivity(commInfoIntent)
+            }
+*/
             R.id.settings -> loadSettings()
             R.id.logOut -> logout()
+            else -> {}
         }
         return if (mDrawerToggle!!.onOptionsItemSelected(item)) {
             true
