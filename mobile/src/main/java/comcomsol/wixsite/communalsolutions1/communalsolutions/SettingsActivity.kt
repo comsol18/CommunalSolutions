@@ -22,6 +22,7 @@ import com.google.firebase.database.*
 import comcomsol.wixsite.communalsolutions1.communalsolutions.Adapters.ContactsAdapter
 import comcomsol.wixsite.communalsolutions1.communalsolutions.Managers.*
 import kotlinx.android.synthetic.main.activity_settings.*
+import kotlinx.android.synthetic.main.toolbar.*
 
 class SettingsActivity : AppCompatActivity() {
     private val TAG = "SettingsActivity"
@@ -112,28 +113,9 @@ class SettingsActivity : AppCompatActivity() {
     }
 
     private fun configureToolbar() {
-        val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
     }
-
-/*
-    private val locationListener: LocationListener = object : LocationListener {
-        override fun onLocationChanged(location: Location) {
-            */
-/*
-            val lat: Double = Math.round(location.latitude*1000.0)/1000.0
-            val long: Double = Math.round(location.longitude*1000.0)/1000.0
-            val userLocation = UserLocation(lat, long, dbValues.uuid)
-            *//*
-
-            dbReferences.locReference.setValue(location)
-        }
-        override fun onStatusChanged(provider: String, status: Int, extras: Bundle) {}
-        override fun onProviderEnabled(provider: String) {}
-        override fun onProviderDisabled(provider: String) {}
-    }
-*/
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -148,26 +130,6 @@ class SettingsActivity : AppCompatActivity() {
         spinner = findViewById(R.id.spinner) as Spinner
         configureToolbar()
         toolbarTextView!!.visibility = View.VISIBLE
-
-/*        locationManager = getSystemService(LOCATION_SERVICE) as LocationManager?
-        val MY_PERMISSIONS_REQUEST = 9002
-
-        try {
-            // Request location updates
-            if (ContextCompat.checkSelfPermission(this@SettingsActivity, Manifest.permission.ACCESS_FINE_LOCATION)
-                    != PackageManager.PERMISSION_GRANTED) {
-
-                    ActivityCompat.requestPermissions(this@SettingsActivity,
-                            arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
-                            MY_PERMISSIONS_REQUEST)
-            } else {
-                // Permission has already been granted
-                locationManager?.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0L, 0f, locationListener)
-            }
-        } catch(ex: SecurityException) {
-            Log.e("Exception", ex.toString())
-            Log.e("myTag", "Security Exception, no location available")
-        }*/
 
         setOnClickListeners(arrayListOf(contact1, contact2, contact3, contact4, contact5, contact6, saveSettings))
     }

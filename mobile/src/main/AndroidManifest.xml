@@ -21,6 +21,7 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
+
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name">
@@ -47,16 +48,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="comcomsol.wixsite.communalsolutions1.communalsolutions.SettingsActivity" />
         </activity>
-
-        <activity
-            android:name=".CommunityInfoActivity"
-            android:label="@string/title_activity_community_info"
-            android:parentActivityName=".HomeActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="comcomsol.wixsite.communalsolutions1.communalsolutions.HomeActivity" />
-        </activity>
-
     </application>
 
 </manifest>

@@ -1,0 +1,28 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="comcomsol.wixsite.communalsolutions1.communalsolutions.TabbedActivity">
+    <item
+        android:id="@+id/emergency"
+        android:orderInCategory="100"
+        android:title="@string/emergency"
+        app:showAsAction="never"/>
+
+    <item
+        android:id="@+id/hospital"
+        android:orderInCategory="100"
+        android:title="@string/hospital"
+        app:showAsAction="never"/>
+
+    <item
+        android:id="@+id/police"
+        android:orderInCategory="100"
+        android:title="@string/police"
+        app:showAsAction="never"/>
+
+    <item
+        android:id="@+id/defense"
+        android:orderInCategory="100"
+        android:title="@string/defense"
+        app:showAsAction="never"/>
+</menu>
