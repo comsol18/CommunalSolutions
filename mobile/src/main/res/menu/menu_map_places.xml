@@ -4,25 +4,32 @@
     tools:context="comcomsol.wixsite.communalsolutions1.communalsolutions.TabbedActivity">
     <item
         android:id="@+id/emergency"
+        android:checkable="true"
+        android:checked="true"
         android:orderInCategory="100"
         android:title="@string/emergency"
-        app:showAsAction="never"/>
+        app:showAsAction="never" />
 
     <item
         android:id="@+id/hospital"
+        android:checkable="true"
+        android:checked="true"
         android:orderInCategory="100"
         android:title="@string/hospital"
-        app:showAsAction="never"/>
+        app:showAsAction="never" />
 
     <item
         android:id="@+id/police"
+        android:checkable="true"
+        android:checked="true"
         android:orderInCategory="100"
         android:title="@string/police"
-        app:showAsAction="never"/>
-
+        app:showAsAction="never" />
     <item
         android:id="@+id/defense"
+        android:checkable="true"
+        android:checked="true"
         android:orderInCategory="100"
         android:title="@string/defense"
-        app:showAsAction="never"/>
+        app:showAsAction="never" />
 </menu>

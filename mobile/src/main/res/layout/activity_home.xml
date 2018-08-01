@@ -61,6 +61,14 @@
                     android:background="?android:attr/windowBackground"
                     app:menu="@menu/navigation" />
 
+                <TextView android:id="@+id/searchRadius"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginLeft="40dp"
+                    android:layout_gravity="start"
+                    android:text="Search Radius"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
                 <GridLayout
                     android:layout_margin="20dp"
                     android:columnCount="2"
@@ -84,11 +92,12 @@
 
                 </GridLayout>
 
-                <TextView android:id="@+id/jsonData"
-                    android:text="JSON Data"
-                    android:layout_margin="20dp"
+                <ListView android:id="@+id/mapPlaces"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginEnd="20dp"
+                    android:layout_marginBottom="20dp"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"/>
 
             </LinearLayout>
 

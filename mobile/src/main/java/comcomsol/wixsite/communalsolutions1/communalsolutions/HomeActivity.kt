@@ -15,12 +15,18 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.support.design.widget.BottomNavigationView
-import android.widget.SeekBar
+import android.support.v4.app.FragmentActivity
+import android.widget.*
+import com.google.android.gms.common.ConnectionResult
+import com.google.android.gms.common.api.GoogleApiClient
 import com.google.android.gms.maps.*
 import kotlinx.android.synthetic.main.toolbar.*
 import comcomsol.wixsite.communalsolutions1.communalsolutions.HelperFiles.*
 import comcomsol.wixsite.communalsolutions1.communalsolutions.Managers.MapsManager
 import kotlinx.android.synthetic.main.activity_home.*
+import com.google.android.gms.location.places.GeoDataClient
+import com.google.android.gms.location.places.Places
+import com.google.android.gms.location.places.PlaceDetectionClient
 
 class HomeActivity : AppCompatActivity(), OnMapReadyCallback {
     private val TAG = "HomeActivity"
@@ -30,6 +36,10 @@ class HomeActivity : AppCompatActivity(), OnMapReadyCallback {
     private var mhospital = false
     private var mpolice = false
     private var mdefense = false
+    private val mapSearchItemsSelected: ArrayList<String> = ArrayList()
+    private lateinit var mGeoDataClient: GeoDataClient
+    private lateinit var mPlaceDetectionClient: PlaceDetectionClient
+    private lateinit var mGoogleApiClient: GoogleApiClient
 
     // Managers
     private var mapsManager: MapsManager? = null
@@ -49,8 +59,8 @@ class HomeActivity : AppCompatActivity(), OnMapReadyCallback {
             }
             R.id.navigation_center-> {
 //                mapsManager!!.centerMe()
-                val query = mapsManager!!.queryPlaces("libraries")
-                dLog(TAG, query.toString())
+/*                val query = mapsManager!!.queryPlaces("libraries")
+                dLog(TAG, query.toString())*/
                 return@OnNavigationItemSelectedListener true
             }
         }
@@ -69,6 +79,7 @@ class HomeActivity : AppCompatActivity(), OnMapReadyCallback {
 
         configureToolbar()
         configureNavigationDrawer()
+        configureBottomDrawer()
 
         drawer_layout = findViewById(R.id.drawer_layout) as DrawerLayout
         mDrawerToggle = object : ActionBarDrawerToggle(this, drawer_layout, R.string.drawer_open, R.string.drawer_close) {
@@ -86,15 +97,7 @@ class HomeActivity : AppCompatActivity(), OnMapReadyCallback {
 
         drawer_layout!!.setDrawerListener(mDrawerToggle)
         bottomNavigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
-    }
 
-    override fun onMapReady(googleMap: GoogleMap) {
-        mapsManager = MapsManager(this, googleMap, this)
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        getMenuInflater().inflate(R.menu.navigationmenu, menu)
-        return true
     }
 
     private fun configureNavigationDrawer() {
@@ -104,6 +107,36 @@ class HomeActivity : AppCompatActivity(), OnMapReadyCallback {
     private fun configureToolbar() {
         setSupportActionBar(toolbar)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+    }
+
+    private fun configureBottomDrawer() {
+        mapPlaces.choiceMode = ListView.CHOICE_MODE_MULTIPLE
+        val items = arrayListOf<String>("Emergency Contacts", "Hospitals", "Police Stations", "Self Defence Classes")
+        val itemAdapter = ArrayAdapter<String>(this, R.layout.map_row_item, R.id.mapSearchItem, items)
+        mapPlaces.adapter = itemAdapter
+        mapPlaces.onItemClickListener = AdapterView.OnItemClickListener { adapterView: AdapterView<*>, view: View, i: Int, l: Long ->
+            val item = (view as TextView).text.toString()
+            if (mapSearchItemsSelected.contains(item)) mapSearchItemsSelected.remove(item)
+            else mapSearchItemsSelected.add(item)
+        }
+    }
+
+    override fun onMapReady(googleMap: GoogleMap) {
+        mapsManager = MapsManager(this, googleMap, this)
+
+        // Setup google maps places
+        mGeoDataClient = Places.getGeoDataClient(mapsManager!!.mapActivity)
+        mPlaceDetectionClient = Places.getPlaceDetectionClient(mapsManager!!.mapActivity)
+/*        mGoogleApiClient = GoogleApiClient.Builder(this)
+                .addApi(Places.GEO_DATA_API)
+                .addApi(Places.PLACE_DETECTION_API)
+                .enableAutoManage(mapsManager!!.mapActivity, mapsManager!!.mapActivity)
+                .build()*/
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        getMenuInflater().inflate(R.menu.navigationmenu, menu)
+        return true
     }
 
     override fun onPostCreate(savedInstanceState: Bundle?) {

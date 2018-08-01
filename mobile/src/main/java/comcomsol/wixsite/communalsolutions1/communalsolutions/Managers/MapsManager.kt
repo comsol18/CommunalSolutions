@@ -23,9 +23,12 @@ import com.google.firebase.database.ValueEventListener
 import kotlinx.android.synthetic.main.activity_home.*
 import com.google.android.gms.common.GoogleApiAvailability
 import android.net.Uri
+import android.support.v4.app.FragmentActivity
 import com.android.volley.Request
 import com.android.volley.Response
 import com.android.volley.toolbox.JsonObjectRequest
+import com.google.android.gms.common.ConnectionResult
+import com.google.android.gms.common.api.GoogleApiClient
 import org.json.JSONObject
 
 
@@ -40,6 +43,7 @@ class MapsManager(private val context: Context, private val mMap: GoogleMap, pri
     private val seekBar = activity.radiusSeekBar
     private val playVersion = activity.packageManager.getPackageInfo(GoogleApiAvailability.GOOGLE_PLAY_SERVICES_PACKAGE, 0).versionCode
     var searchRadius = 5
+    val mapActivity: MapActivity = this.MapActivity()
 
     // Managers
     private val locationManager: LocationManager?
@@ -77,7 +81,7 @@ class MapsManager(private val context: Context, private val mMap: GoogleMap, pri
         locationManager = activity.getSystemService(LOCATION_SERVICE) as LocationManager?
         mMap.isMyLocationEnabled = true
 
-        dLog(TAG, "Google Play Version: $playVersion")
+//        dLog(TAG, "Google Play Version: $playVersion")
 
         val MY_PERMISSIONS_REQUEST = 9002
         try {
@@ -99,12 +103,12 @@ class MapsManager(private val context: Context, private val mMap: GoogleMap, pri
     }
 
     private fun configSeekBar() {
-        seekBar.min = 5
+        seekBar.min = 10
         seekBar.max = 100
         seekBar.setOnSeekBarChangeListener(this)
     }
 
-    fun queryPlaces(vararg keywords: String): JsonObjectRequest? {
+/*    fun queryPlaces(vararg keywords: String): JsonObjectRequest? {
         val QUERY_URL = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?"
         var keyword = ""
         for (word in keywords) keyword = if (keyword == "") word else "$keyword,$word"
@@ -115,10 +119,10 @@ class MapsManager(private val context: Context, private val mMap: GoogleMap, pri
                 .appendQueryParameter("key", "AIzaSyCYrJBnL2QDUL3xUuSXXoM-YkpSpC42rdE")
                 .build()
         return JsonObjectRequest(Request.Method.GET, queryUri.toString(), null,
-                Response.Listener { response -> activity.jsonData.text = response.toString() },
+                Response.Listener { response -> *//*activity.jsonData.text = response.toString()*//* },
                 Response.ErrorListener { error -> }
         )
-    }
+    }*/
 
     fun centerCamera(location: LatLng, zoom: Float?) {
         if (zoom == null) {
@@ -137,4 +141,9 @@ class MapsManager(private val context: Context, private val mMap: GoogleMap, pri
     }
     override fun onStartTrackingTouch(seekBar: SeekBar?) {}
     override fun onStopTrackingTouch(seekBar: SeekBar?) {}
+
+    inner class MapActivity: FragmentActivity(), GoogleApiClient.OnConnectionFailedListener {
+        override fun onConnectionFailed(p0: ConnectionResult) {
+        }
+    }
 }
