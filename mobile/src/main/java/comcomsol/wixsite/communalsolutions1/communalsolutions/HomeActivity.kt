@@ -15,18 +15,19 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.support.design.widget.BottomNavigationView
-import android.support.v4.app.FragmentActivity
 import android.widget.*
-import com.google.android.gms.common.ConnectionResult
-import com.google.android.gms.common.api.GoogleApiClient
 import com.google.android.gms.maps.*
 import kotlinx.android.synthetic.main.toolbar.*
 import comcomsol.wixsite.communalsolutions1.communalsolutions.HelperFiles.*
+import comcomsol.wixsite.communalsolutions1.communalsolutions.Managers.JSONManager
 import comcomsol.wixsite.communalsolutions1.communalsolutions.Managers.MapsManager
 import kotlinx.android.synthetic.main.activity_home.*
-import com.google.android.gms.location.places.GeoDataClient
+/*import com.google.android.gms.location.places.GeoDataClient
+import android.support.v4.app.FragmentActivity
+import com.google.android.gms.common.ConnectionResult
+import com.google.android.gms.common.api.GoogleApiClient
 import com.google.android.gms.location.places.Places
-import com.google.android.gms.location.places.PlaceDetectionClient
+import com.google.android.gms.location.places.PlaceDetectionClient*/
 
 class HomeActivity : AppCompatActivity(), OnMapReadyCallback {
     private val TAG = "HomeActivity"
@@ -37,16 +38,10 @@ class HomeActivity : AppCompatActivity(), OnMapReadyCallback {
     private var mpolice = false
     private var mdefense = false
     private val mapSearchItemsSelected: ArrayList<String> = ArrayList()
-    private lateinit var mGeoDataClient: GeoDataClient
-    private lateinit var mPlaceDetectionClient: PlaceDetectionClient
-    private lateinit var mGoogleApiClient: GoogleApiClient
 
     // Managers
     private var mapsManager: MapsManager? = null
-
-    // Database
-    private val dbValues = DBValues()
-    private val dbReferences = DBReferences()
+    private lateinit var jsonManager: JSONManager
 
     private val mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
         when (item.itemId) {
@@ -58,9 +53,9 @@ class HomeActivity : AppCompatActivity(), OnMapReadyCallback {
                 return@OnNavigationItemSelectedListener true
             }
             R.id.navigation_center-> {
-//                mapsManager!!.centerMe()
-/*                val query = mapsManager!!.queryPlaces("libraries")
-                dLog(TAG, query.toString())*/
+                val query = mapsManager!!.queryPlaces(mapSearchItemsSelected)
+                val places = mapsManager!!.jsonManager.jsonPlaceSearch(query, MapSearchTypes.Hospital)
+                for (place in places) dLog(TAG, place.toString())
                 return@OnNavigationItemSelectedListener true
             }
         }
@@ -76,7 +71,6 @@ class HomeActivity : AppCompatActivity(), OnMapReadyCallback {
         mapFragment.getMapAsync(this)
 
         getPermissions()
-
         configureToolbar()
         configureNavigationDrawer()
         configureBottomDrawer()
@@ -111,7 +105,7 @@ class HomeActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private fun configureBottomDrawer() {
         mapPlaces.choiceMode = ListView.CHOICE_MODE_MULTIPLE
-        val items = arrayListOf<String>("Emergency Contacts", "Hospitals", "Police Stations", "Self Defence Classes")
+        val items = arrayListOf("Emergency Contacts", "Hospitals", "Police Stations", "Self Defence Classes")
         val itemAdapter = ArrayAdapter<String>(this, R.layout.map_row_item, R.id.mapSearchItem, items)
         mapPlaces.adapter = itemAdapter
         mapPlaces.onItemClickListener = AdapterView.OnItemClickListener { adapterView: AdapterView<*>, view: View, i: Int, l: Long ->
@@ -125,9 +119,9 @@ class HomeActivity : AppCompatActivity(), OnMapReadyCallback {
         mapsManager = MapsManager(this, googleMap, this)
 
         // Setup google maps places
-        mGeoDataClient = Places.getGeoDataClient(mapsManager!!.mapActivity)
+/*        mGeoDataClient = Places.getGeoDataClient(mapsManager!!.mapActivity)
         mPlaceDetectionClient = Places.getPlaceDetectionClient(mapsManager!!.mapActivity)
-/*        mGoogleApiClient = GoogleApiClient.Builder(this)
+        mGoogleApiClient = GoogleApiClient.Builder(this)
                 .addApi(Places.GEO_DATA_API)
                 .addApi(Places.PLACE_DETECTION_API)
                 .enableAutoManage(mapsManager!!.mapActivity, mapsManager!!.mapActivity)
@@ -223,5 +217,4 @@ class HomeActivity : AppCompatActivity(), OnMapReadyCallback {
         FirebaseAuth.getInstance().signOut()
         super.finish()
     }
-
 }

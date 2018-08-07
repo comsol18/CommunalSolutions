@@ -10,6 +10,7 @@ import comcomsol.wixsite.communalsolutions1.communalsolutions.HelperFiles.*
 import comcomsol.wixsite.communalsolutions1.communalsolutions.R
 import comcomsol.wixsite.communalsolutions1.communalsolutions.R.id.*
 import com.google.firebase.database.*
+import comcomsol.wixsite.communalsolutions1.communalsolutions.VirtualObjects.Profile
 
 class SettingsManager() {
 

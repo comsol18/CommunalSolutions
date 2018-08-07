@@ -1,6 +1,6 @@
-package comcomsol.wixsite.communalsolutions1.communalsolutions.HelperFiles
+package comcomsol.wixsite.communalsolutions1.communalsolutions.VirtualObjects
 
-import android.util.Log
+import comcomsol.wixsite.communalsolutions1.communalsolutions.HelperFiles.DBValues
 
 class Profile() {
     // profile info

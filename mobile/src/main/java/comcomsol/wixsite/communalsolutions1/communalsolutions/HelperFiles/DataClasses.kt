@@ -4,6 +4,11 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
+import comcomsol.wixsite.communalsolutions1.communalsolutions.VirtualObjects.Contact
+
+enum class MapSearchTypes {
+    Hospital, SelfDefenseCourse, Police, Clinic, EmergencyContact, Abstract
+}
 
 data class DBValues(
         val database: FirebaseDatabase = FirebaseDatabase.getInstance(),

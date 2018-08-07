@@ -99,6 +99,18 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"/>
 
+                <ScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView android:id="@+id/jsonData"
+                        android:layout_marginStart="20dp"
+                        android:layout_marginEnd="20dp"
+                        android:layout_marginBottom="20dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+                </ScrollView>
+
             </LinearLayout>
 
         </com.sothree.slidinguppanel.SlidingUpPanelLayout>
@@ -111,9 +123,7 @@
         android:layout_height="match_parent"
         android:layout_gravity="start"
         app:headerLayout="@layout/nav_header"
-        app:menu="@menu/navigationmenu">
-
-    </android.support.design.widget.NavigationView>
+        app:menu="@menu/navigationmenu" />
 
 </android.support.v4.widget.DrawerLayout>
 

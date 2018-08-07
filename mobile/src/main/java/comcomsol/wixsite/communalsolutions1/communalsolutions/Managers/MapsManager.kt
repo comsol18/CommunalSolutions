@@ -21,32 +21,36 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import kotlinx.android.synthetic.main.activity_home.*
-import com.google.android.gms.common.GoogleApiAvailability
 import android.net.Uri
-import android.support.v4.app.FragmentActivity
+import android.os.StrictMode
+import comcomsol.wixsite.communalsolutions1.communalsolutions.VirtualObjects.UserLocation
+import java.net.URL
+import java.nio.charset.Charset
+import org.json.*
+import java.io.*
+/*import android.support.v4.app.FragmentActivity
+import com.google.android.gms.common.GoogleApiAvailability
 import com.android.volley.Request
 import com.android.volley.Response
 import com.android.volley.toolbox.JsonObjectRequest
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.api.GoogleApiClient
-import org.json.JSONObject
-
+import com.google.gson.JsonObject*/
 
 class MapsManager(private val context: Context, private val mMap: GoogleMap, private val activity: Activity): SeekBar.OnSeekBarChangeListener {
 
     private val TAG = "MapsManager"
+//    private val playVersion = activity.packageManager.getPackageInfo(GoogleApiAvailability.GOOGLE_PLAY_SERVICES_PACKAGE, 0).versionCode
 
     // Database
-//    private val dbValues = DBValues()
     private val dbReferences = DBReferences()
     private var location: UserLocation = UserLocation()
     private val seekBar = activity.radiusSeekBar
-    private val playVersion = activity.packageManager.getPackageInfo(GoogleApiAvailability.GOOGLE_PLAY_SERVICES_PACKAGE, 0).versionCode
     var searchRadius = 5
-    val mapActivity: MapActivity = this.MapActivity()
 
     // Managers
     private val locationManager: LocationManager?
+    lateinit var jsonManager: JSONManager
 
     // Listeners
     private var centered = false
@@ -64,6 +68,7 @@ class MapsManager(private val context: Context, private val mMap: GoogleMap, pri
             // if dataSnapshot exists
             if (dataSnapshot.exists()) {
                 location = dataSnapshot.getValue(UserLocation::class.java)!!
+                jsonManager = JSONManager(getLatLng())
             }
             if (!centered) {
                 centerCamera(getLatLng(), 15f)
@@ -76,12 +81,13 @@ class MapsManager(private val context: Context, private val mMap: GoogleMap, pri
     }
 
     init {
+        val policy: StrictMode.ThreadPolicy = StrictMode.ThreadPolicy.Builder().permitAll().build()
+        StrictMode.setThreadPolicy(policy)
+
         configSeekBar()
         dbReferences.locReference.addValueEventListener(cameraLocationListener)
         locationManager = activity.getSystemService(LOCATION_SERVICE) as LocationManager?
         mMap.isMyLocationEnabled = true
-
-//        dLog(TAG, "Google Play Version: $playVersion")
 
         val MY_PERMISSIONS_REQUEST = 9002
         try {
@@ -103,12 +109,12 @@ class MapsManager(private val context: Context, private val mMap: GoogleMap, pri
     }
 
     private fun configSeekBar() {
-        seekBar.min = 10
-        seekBar.max = 100
+        seekBar.progress = searchRadius
+        seekBar.max = 50
         seekBar.setOnSeekBarChangeListener(this)
     }
 
-/*    fun queryPlaces(vararg keywords: String): JsonObjectRequest? {
+    fun queryPlaces(keywords: ArrayList<String>): JSONObject {
         val QUERY_URL = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?"
         var keyword = ""
         for (word in keywords) keyword = if (keyword == "") word else "$keyword,$word"
@@ -116,13 +122,21 @@ class MapsManager(private val context: Context, private val mMap: GoogleMap, pri
                 .appendQueryParameter("location", "${location.latitude},${location.longitude}")
                 .appendQueryParameter("radius", "${searchRadius*1609}")
                 .appendQueryParameter("keyword", keyword)
-                .appendQueryParameter("key", "AIzaSyCYrJBnL2QDUL3xUuSXXoM-YkpSpC42rdE")
+                .appendQueryParameter("key", "AIzaSyA4RWZqvcpQxZWSxtmAtG_1dB3gG26FvdQ")
                 .build()
-        return JsonObjectRequest(Request.Method.GET, queryUri.toString(), null,
-                Response.Listener { response -> *//*activity.jsonData.text = response.toString()*//* },
-                Response.ErrorListener { error -> }
-        )
-    }*/
+
+        dLog(TAG, queryUri.toString())
+
+        // Connect to the URL using java's native library
+        val inputStream: InputStream = URL(queryUri.toString()).openStream()
+        try {
+            val rd = BufferedReader(InputStreamReader(inputStream, Charset.forName("UTF-8")))
+            val jsonText = readAll(rd)
+            return JSONObject(jsonText)
+        } finally {
+            inputStream.close()
+        }
+    }
 
     fun centerCamera(location: LatLng, zoom: Float?) {
         if (zoom == null) {
@@ -141,9 +155,4 @@ class MapsManager(private val context: Context, private val mMap: GoogleMap, pri
     }
     override fun onStartTrackingTouch(seekBar: SeekBar?) {}
     override fun onStopTrackingTouch(seekBar: SeekBar?) {}
-
-    inner class MapActivity: FragmentActivity(), GoogleApiClient.OnConnectionFailedListener {
-        override fun onConnectionFailed(p0: ConnectionResult) {
-        }
-    }
 }

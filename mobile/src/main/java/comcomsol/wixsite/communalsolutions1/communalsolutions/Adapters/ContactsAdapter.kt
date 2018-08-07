@@ -1,7 +1,5 @@
 package comcomsol.wixsite.communalsolutions1.communalsolutions.Adapters
 
-import android.app.Activity
-import android.content.Context
 import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.LayoutInflater
@@ -15,7 +13,7 @@ import comcomsol.wixsite.communalsolutions1.communalsolutions.HelperFiles.*
 import comcomsol.wixsite.communalsolutions1.communalsolutions.R
 import com.amulyakhare.textdrawable.TextDrawable
 import com.amulyakhare.textdrawable.util.ColorGenerator
-import com.squareup.picasso.Picasso
+import comcomsol.wixsite.communalsolutions1.communalsolutions.VirtualObjects.Contact
 
 class ContactsAdapter(private val contactList: List<Contact>, private val listener: ContactsAdapter.ContactListener) : RecyclerView.Adapter<ContactsAdapter.ViewHolder>(), Filterable {
     private val TAG = "ContactsAdapter"
