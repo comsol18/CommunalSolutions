@@ -6,10 +6,6 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import comcomsol.wixsite.communalsolutions1.communalsolutions.VirtualObjects.Contact
 
-enum class MapSearchTypes {
-    Hospital, SelfDefenseCourse, Police, Clinic, EmergencyContact, Abstract
-}
-
 data class DBValues(
         val database: FirebaseDatabase = FirebaseDatabase.getInstance(),
         val reference: DatabaseReference = database.reference,

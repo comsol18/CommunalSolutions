@@ -22,41 +22,44 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import kotlinx.android.synthetic.main.activity_home.*
 import android.net.Uri
+import android.os.AsyncTask
 import android.os.StrictMode
-import comcomsol.wixsite.communalsolutions1.communalsolutions.VirtualObjects.UserLocation
+import android.util.JsonReader
+import android.widget.Toast
+import com.google.android.gms.maps.model.MarkerOptions
+import comcomsol.wixsite.communalsolutions1.communalsolutions.R.id.*
+import comcomsol.wixsite.communalsolutions1.communalsolutions.VirtualObjects.*
+import kotlinx.coroutines.experimental.CommonPool
+import kotlinx.coroutines.experimental.launch
+import org.jetbrains.anko.coroutines.experimental.bg
 import java.net.URL
 import java.nio.charset.Charset
 import org.json.*
 import java.io.*
-/*import android.support.v4.app.FragmentActivity
-import com.google.android.gms.common.GoogleApiAvailability
-import com.android.volley.Request
-import com.android.volley.Response
-import com.android.volley.toolbox.JsonObjectRequest
-import com.google.android.gms.common.ConnectionResult
-import com.google.android.gms.common.api.GoogleApiClient
-import com.google.gson.JsonObject*/
 
-class MapsManager(private val context: Context, private val mMap: GoogleMap, private val activity: Activity): SeekBar.OnSeekBarChangeListener {
+class MapsManager(context: Context, private val mMap: GoogleMap, private val activity: Activity): SeekBar.OnSeekBarChangeListener {
 
+    // Other Variables and Values
     private val TAG = "MapsManager"
-//    private val playVersion = activity.packageManager.getPackageInfo(GoogleApiAvailability.GOOGLE_PLAY_SERVICES_PACKAGE, 0).versionCode
+    var markerAdder: MarkerAdder? = null
 
     // Database
     private val dbReferences = DBReferences()
     private var location: UserLocation = UserLocation()
-    private val seekBar = activity.radiusSeekBar
-    var searchRadius = 5
+    private val radiusSeekBar = activity.radiusSeekBar
+    private val listingsSeekBar = activity.numListingsSeekbar
+    var searchRadius = 4
+    var numListings = 5
 
     // Managers
     private val locationManager: LocationManager?
-    lateinit var jsonManager: JSONManager
 
     // Listeners
     private var centered = false
     private val locationListener: LocationListener = object : LocationListener {
         override fun onLocationChanged(location: Location) {
             dbReferences.locReference.setValue(UserLocation(location))
+            markerAdder = MarkerAdder(context, mMap, LatLng(location.latitude, location.longitude))
         }
         override fun onStatusChanged(provider: String, status: Int, extras: Bundle) {}
         override fun onProviderEnabled(provider: String) {}
@@ -68,7 +71,6 @@ class MapsManager(private val context: Context, private val mMap: GoogleMap, pri
             // if dataSnapshot exists
             if (dataSnapshot.exists()) {
                 location = dataSnapshot.getValue(UserLocation::class.java)!!
-                jsonManager = JSONManager(getLatLng())
             }
             if (!centered) {
                 centerCamera(getLatLng(), 15f)
@@ -80,11 +82,62 @@ class MapsManager(private val context: Context, private val mMap: GoogleMap, pri
         }
     }
 
+    // Public functions
+    fun clearMap() { mMap.clear() }
+
+    fun centerCamera(location: LatLng, zoom: Float?) {
+        if (zoom == null) {
+            mMap.moveCamera(CameraUpdateFactory.newLatLng(location))
+        } else {
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, zoom))
+        }
+    }
+
+    fun getLatLng(): LatLng { return LatLng(location.latitude, location.longitude) }
+
+    // private functions
+    private fun configSeekBars() {
+        radiusSeekBar.progress = searchRadius
+        radiusSeekBar.max = 19
+        radiusSeekBar.setOnSeekBarChangeListener(this)
+
+        listingsSeekBar.progress = numListings
+        listingsSeekBar.max = 15
+        listingsSeekBar.setOnSeekBarChangeListener(this)
+    }
+
+    // Overridden functions
+    // SeekBar.OnSeekBarChangeListener interface functions
+    override fun onStartTrackingTouch(seekBar: SeekBar?) {}
+    override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+        when (seekBar!!) {
+            radiusSeekBar -> {
+                searchRadius = progress + 1
+                activity.radius.text = "$searchRadius miles"
+            }
+            listingsSeekBar -> {
+                numListings = progress + 5
+                activity.totalNumListings.text = "$numListings listings"
+            }
+        }
+    }
+
+    override fun onStopTrackingTouch(seekBar: SeekBar?) {
+        if (markerAdder != null) {
+            when (seekBar!!) {
+                radiusSeekBar -> markerAdder!!.miles = searchRadius
+                listingsSeekBar -> markerAdder!!.numListings = numListings
+            }
+//            markerAdder!!.buildQuery()
+        }
+    }
+
+    // Initialization
     init {
         val policy: StrictMode.ThreadPolicy = StrictMode.ThreadPolicy.Builder().permitAll().build()
         StrictMode.setThreadPolicy(policy)
 
-        configSeekBar()
+        configSeekBars()
         dbReferences.locReference.addValueEventListener(cameraLocationListener)
         locationManager = activity.getSystemService(LOCATION_SERVICE) as LocationManager?
         mMap.isMyLocationEnabled = true
@@ -107,52 +160,4 @@ class MapsManager(private val context: Context, private val mMap: GoogleMap, pri
             Log.e("myTag", "Security Exception, no location available")
         }
     }
-
-    private fun configSeekBar() {
-        seekBar.progress = searchRadius
-        seekBar.max = 50
-        seekBar.setOnSeekBarChangeListener(this)
-    }
-
-    fun queryPlaces(keywords: ArrayList<String>): JSONObject {
-        val QUERY_URL = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?"
-        var keyword = ""
-        for (word in keywords) keyword = if (keyword == "") word else "$keyword,$word"
-        val queryUri: Uri = Uri.parse(QUERY_URL).buildUpon()
-                .appendQueryParameter("location", "${location.latitude},${location.longitude}")
-                .appendQueryParameter("radius", "${searchRadius*1609}")
-                .appendQueryParameter("keyword", keyword)
-                .appendQueryParameter("key", "AIzaSyA4RWZqvcpQxZWSxtmAtG_1dB3gG26FvdQ")
-                .build()
-
-        dLog(TAG, queryUri.toString())
-
-        // Connect to the URL using java's native library
-        val inputStream: InputStream = URL(queryUri.toString()).openStream()
-        try {
-            val rd = BufferedReader(InputStreamReader(inputStream, Charset.forName("UTF-8")))
-            val jsonText = readAll(rd)
-            return JSONObject(jsonText)
-        } finally {
-            inputStream.close()
-        }
-    }
-
-    fun centerCamera(location: LatLng, zoom: Float?) {
-        if (zoom == null) {
-            mMap.moveCamera(CameraUpdateFactory.newLatLng(location))
-        } else {
-            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, zoom))
-        }
-    }
-
-    fun getLatLng(): LatLng { return LatLng(location.latitude, location.longitude) }
-
-    // SeekBar.OnSeekBarChangeListener interface functions
-    override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-        searchRadius = progress
-        activity.radius.text = "$searchRadius miles"
-    }
-    override fun onStartTrackingTouch(seekBar: SeekBar?) {}
-    override fun onStopTrackingTouch(seekBar: SeekBar?) {}
 }

@@ -4,7 +4,7 @@ import android.net.Uri
 import android.os.StrictMode
 import com.google.android.gms.maps.model.LatLng
 import comcomsol.wixsite.communalsolutions1.communalsolutions.HelperFiles.*
-import org.json.JSONArray
+import org.json.JSONException
 import org.json.JSONObject
 import java.io.BufferedReader
 import java.io.InputStream
@@ -12,24 +12,32 @@ import java.io.InputStreamReader
 import java.net.URL
 import java.nio.charset.Charset
 
+enum class MapSearchTypes {
+    Hospital, SelfDefenseCourse, Police, Clinic, EmergencyContact, Abstract
+}
+
 class Hospital(jsonPlace: JSONObject, userLocation: LatLng): LocalPlace(jsonPlace, userLocation) {
     override var TAG: String = "Hospital"
     override var searchType: MapSearchTypes = MapSearchTypes.Hospital
+    override var distance: Double = distanceInMiles()
 }
 
 class Police(jsonPlace: JSONObject, userLocation: LatLng): LocalPlace(jsonPlace, userLocation) {
     override var TAG: String = "Police"
     override var searchType: MapSearchTypes = MapSearchTypes.Police
+    override var distance: Double = distanceInMiles()
 }
 
 class Clinic(jsonPlace: JSONObject, userLocation: LatLng): LocalPlace(jsonPlace, userLocation) {
     override var TAG: String = "Clinic"
     override var searchType: MapSearchTypes = MapSearchTypes.Clinic
+    override var distance: Double = distanceInMiles()
 }
 
 class SelfDefenseCourse(jsonPlace: JSONObject, userLocation: LatLng): LocalPlace(jsonPlace, userLocation) {
     override var TAG: String = "SelfDefenseCourse"
     override var searchType: MapSearchTypes = MapSearchTypes.SelfDefenseCourse
+    override var distance: Double = distanceInMiles()
 }
 
 class EmergencyContact() {
@@ -42,15 +50,10 @@ abstract class LocalPlace(private val jsonPlace: JSONObject, private val userLoc
     // abstract variables
     abstract var TAG: String
     abstract var searchType: MapSearchTypes
-//    var location: LatLng = LatLng(0.0, 0.0)
-    var location: () -> LatLng = {
-        val coordinates= jsonPlace.getJSONObject("geometry").getJSONObject("location").toString()
-        val lat: Double = coordinates.substringAfter("lat\":").substringBefore(',').toDouble()
-        val long: Double = coordinates.substringAfter("lng\":").substringBefore('}').toDouble()
-//        dLog(TAG, LatLng(lat, long).toString())
-        LatLng(lat, long)
-    }
-    val distance = distanceInMiles()
+    abstract var distance: Double
+    val name = jsonPlace.getString("name")
+    val coordinates= jsonPlace.getJSONObject("geometry").getJSONObject("location")
+    val location = LatLng(coordinates.getDouble("lat"), coordinates.getDouble("lng"))
 
     // lambdas
     fun distanceInMiles(): Double {
@@ -58,7 +61,7 @@ abstract class LocalPlace(private val jsonPlace: JSONObject, private val userLoc
         val distanceUri: Uri = Uri.parse(QUERY_URL).buildUpon()
                 .appendQueryParameter("units", "imperial")
                 .appendQueryParameter("origins", "${userLocation.latitude},${userLocation.longitude}")
-                .appendQueryParameter("destinations", "${location().latitude},${location().longitude}")
+                .appendQueryParameter("destinations", "${location.latitude},${location.longitude}")
                 .appendQueryParameter("key", "AIzaSyA4RWZqvcpQxZWSxtmAtG_1dB3gG26FvdQ")
                 .build()
 
@@ -71,6 +74,8 @@ abstract class LocalPlace(private val jsonPlace: JSONObject, private val userLoc
             val jsonDistance = jsonObject.substringAfterLast(':').substringBeforeLast('}').toDouble()
             dLog("LocalPlace", "Distance: $jsonDistance")
             return jsonDistance
+        } catch (e: JSONException) {
+            return 0.0
         } finally {
             inputStream.close()
         }

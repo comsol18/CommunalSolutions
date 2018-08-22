@@ -19,9 +19,12 @@ import android.widget.*
 import com.google.android.gms.maps.*
 import kotlinx.android.synthetic.main.toolbar.*
 import comcomsol.wixsite.communalsolutions1.communalsolutions.HelperFiles.*
-import comcomsol.wixsite.communalsolutions1.communalsolutions.Managers.JSONManager
 import comcomsol.wixsite.communalsolutions1.communalsolutions.Managers.MapsManager
+import comcomsol.wixsite.communalsolutions1.communalsolutions.VirtualObjects.MapSearchTypes
 import kotlinx.android.synthetic.main.activity_home.*
+import org.jetbrains.anko.coroutines.experimental.bg
+import kotlin.concurrent.thread
+
 /*import com.google.android.gms.location.places.GeoDataClient
 import android.support.v4.app.FragmentActivity
 import com.google.android.gms.common.ConnectionResult
@@ -37,11 +40,9 @@ class HomeActivity : AppCompatActivity(), OnMapReadyCallback {
     private var mhospital = false
     private var mpolice = false
     private var mdefense = false
-    private val mapSearchItemsSelected: ArrayList<String> = ArrayList()
 
     // Managers
     private var mapsManager: MapsManager? = null
-    private lateinit var jsonManager: JSONManager
 
     private val mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
         when (item.itemId) {
@@ -53,13 +54,16 @@ class HomeActivity : AppCompatActivity(), OnMapReadyCallback {
                 return@OnNavigationItemSelectedListener true
             }
             R.id.navigation_center-> {
-                val query = mapsManager!!.queryPlaces(mapSearchItemsSelected)
-                val places = mapsManager!!.jsonManager.jsonPlaceSearch(query, MapSearchTypes.Hospital)
-                for (place in places) dLog(TAG, place.toString())
+                mapsManager!!.clearMap()
+                if (mapsManager!!.markerAdder != null) {
+                    try {
+                        mapsManager!!.markerAdder!!.execute()
+                    } catch (e: IllegalStateException) {}
+                }
                 return@OnNavigationItemSelectedListener true
             }
+            else -> return@OnNavigationItemSelectedListener false
         }
-        false
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -104,28 +108,23 @@ class HomeActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     private fun configureBottomDrawer() {
-        mapPlaces.choiceMode = ListView.CHOICE_MODE_MULTIPLE
-        val items = arrayListOf("Emergency Contacts", "Hospitals", "Police Stations", "Self Defence Classes")
+        mapPlaces.choiceMode = ListView.CHOICE_MODE_SINGLE
+        val items = arrayListOf("Clinics", "Hospitals", "Police Stations", "Self Defense Classes")
         val itemAdapter = ArrayAdapter<String>(this, R.layout.map_row_item, R.id.mapSearchItem, items)
         mapPlaces.adapter = itemAdapter
         mapPlaces.onItemClickListener = AdapterView.OnItemClickListener { adapterView: AdapterView<*>, view: View, i: Int, l: Long ->
             val item = (view as TextView).text.toString()
-            if (mapSearchItemsSelected.contains(item)) mapSearchItemsSelected.remove(item)
-            else mapSearchItemsSelected.add(item)
+            when (item) {
+                items[0] -> mapsManager!!.markerAdder!!.mapSearchType = MapSearchTypes.Clinic
+                items[1] -> mapsManager!!.markerAdder!!.mapSearchType = MapSearchTypes.Hospital
+                items[2] -> mapsManager!!.markerAdder!!.mapSearchType = MapSearchTypes.Police
+                items[3] -> mapsManager!!.markerAdder!!.mapSearchType = MapSearchTypes.SelfDefenseCourse
+            }
         }
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
         mapsManager = MapsManager(this, googleMap, this)
-
-        // Setup google maps places
-/*        mGeoDataClient = Places.getGeoDataClient(mapsManager!!.mapActivity)
-        mPlaceDetectionClient = Places.getPlaceDetectionClient(mapsManager!!.mapActivity)
-        mGoogleApiClient = GoogleApiClient.Builder(this)
-                .addApi(Places.GEO_DATA_API)
-                .addApi(Places.PLACE_DETECTION_API)
-                .enableAutoManage(mapsManager!!.mapActivity, mapsManager!!.mapActivity)
-                .build()*/
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
