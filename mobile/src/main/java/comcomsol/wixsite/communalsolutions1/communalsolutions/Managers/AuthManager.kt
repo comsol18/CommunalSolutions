@@ -4,6 +4,10 @@ import android.text.TextUtils
 import android.widget.EditText
 import com.google.firebase.auth.FirebaseAuth
 
+/*
+AuthManager is a manager that handles login and signup requests and checks to a user is logged in.
+ */
+
 class AuthManager {
     var mAuth: FirebaseAuth? = null
 

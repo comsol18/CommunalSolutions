@@ -6,6 +6,11 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import comcomsol.wixsite.communalsolutions1.communalsolutions.VirtualObjects.Contact
 
+/*
+The following data classes provide quick references to specific places in the
+Firebase Databae.
+ */
+
 data class DBValues(
         val database: FirebaseDatabase = FirebaseDatabase.getInstance(),
         val reference: DatabaseReference = database.reference,
@@ -27,6 +32,10 @@ data class DBPublicReferences(
         val database: FirebaseDatabase = FirebaseDatabase.getInstance(),
         val dbReference: DatabaseReference = database.reference.child("public")
 )
+
+/*
+ContactList defines a schema for the list of contacts that a profile contains as emergency contacts.
+ */
 
 data class ContactList(
         var contact1: Contact = Contact(),

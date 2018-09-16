@@ -17,6 +17,7 @@ import comcomsol.wixsite.communalsolutions1.communalsolutions.HelperFiles.*
 import kotlinx.android.synthetic.main.activity_main.*
 import comcomsol.wixsite.communalsolutions1.communalsolutions.Managers.*
 
+// The main activity is where the user either signs in or signs up and is then brought to the home screen.
 
 class MainActivity : AppCompatActivity() {
 

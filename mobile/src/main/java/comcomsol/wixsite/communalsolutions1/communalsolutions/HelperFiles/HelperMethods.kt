@@ -6,6 +6,10 @@ import android.util.Log
 import java.io.IOException
 import java.io.Reader
 
+/*
+These methods are used for easy debugging purposes
+ */
+
 fun eLog(tag: String, msg: String) {
     Log.e(tag, msg)
     Thread.sleep(1)

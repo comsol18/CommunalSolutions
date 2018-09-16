@@ -12,6 +12,10 @@ import comcomsol.wixsite.communalsolutions1.communalsolutions.R.id.*
 import com.google.firebase.database.*
 import comcomsol.wixsite.communalsolutions1.communalsolutions.VirtualObjects.Profile
 
+/*
+The Settings manager manages the user's profile information and updates the database accordingly
+ */
+
 class SettingsManager() {
 
     val dbValues = DBValues()

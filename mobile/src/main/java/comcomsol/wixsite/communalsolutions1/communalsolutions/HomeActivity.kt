@@ -8,6 +8,7 @@ import com.google.firebase.auth.FirebaseAuth
 import android.content.pm.PackageManager
 import android.support.v4.app.ActivityCompat
 import android.Manifest
+import android.content.DialogInterface
 import android.content.res.Configuration
 import android.support.v4.widget.DrawerLayout
 import android.support.v7.app.ActionBarDrawerToggle
@@ -15,6 +16,7 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.support.design.widget.BottomNavigationView
+import android.support.v7.app.AlertDialog
 import android.widget.*
 import com.google.android.gms.maps.*
 import kotlinx.android.synthetic.main.toolbar.*
@@ -24,6 +26,13 @@ import comcomsol.wixsite.communalsolutions1.communalsolutions.VirtualObjects.Map
 import kotlinx.android.synthetic.main.activity_home.*
 import org.jetbrains.anko.coroutines.experimental.bg
 import kotlin.concurrent.thread
+import android.R.string.ok
+import android.net.Uri
+import android.os.AsyncTask
+import kotlinx.coroutines.experimental.CommonPool
+import kotlinx.coroutines.experimental.async
+import kotlinx.coroutines.experimental.launch
+
 
 /*import com.google.android.gms.location.places.GeoDataClient
 import android.support.v4.app.FragmentActivity
@@ -31,6 +40,8 @@ import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.api.GoogleApiClient
 import com.google.android.gms.location.places.Places
 import com.google.android.gms.location.places.PlaceDetectionClient*/
+
+// The Home Activity is where the user may search for places on the map and call for the police if necessary.
 
 class HomeActivity : AppCompatActivity(), OnMapReadyCallback {
     private val TAG = "HomeActivity"
@@ -51,6 +62,7 @@ class HomeActivity : AppCompatActivity(), OnMapReadyCallback {
                 return@OnNavigationItemSelectedListener true
             }
             R.id.navigation_emergency-> {
+                callPolice()
                 return@OnNavigationItemSelectedListener true
             }
             R.id.navigation_center-> {
@@ -64,6 +76,62 @@ class HomeActivity : AppCompatActivity(), OnMapReadyCallback {
             }
             else -> return@OnNavigationItemSelectedListener false
         }
+    }
+
+    inner class CountdownDialog {
+        private val dialog: AlertDialog
+        private val dialogBuilder: AlertDialog.Builder = AlertDialog.Builder(this@HomeActivity)
+                .setMessage("Calling police in 10 seconds")
+                .setTitle("Call the Police?")
+
+        private fun makeCall() {
+            val MY_PERMISSIONS_REQUEST= 9002
+            // TODO NOTE*** Only uncomment the following line if you want the app to call 911, otherwise replace 911 with a different number or leave commented ***
+//            val POLICE_NUMBER = "tel:911"
+            val POLICE_NUMBER = "tel:5555555555"
+
+            val callIntent = Intent(Intent.ACTION_CALL, Uri.parse(POLICE_NUMBER))
+            if (ActivityCompat.checkSelfPermission(this@HomeActivity, Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_GRANTED) startActivity(callIntent)
+            else {
+                ActivityCompat.requestPermissions(this@HomeActivity,
+                        arrayOf(Manifest.permission.CALL_PHONE),
+                        MY_PERMISSIONS_REQUEST)
+                startActivity(callIntent)
+            }
+        }
+
+        fun startDialog() {
+            dialog.show()
+            while (dialog.isShowing) {
+
+            }
+
+        }
+
+        init {
+            dialogBuilder.setPositiveButton("Call Now", DialogInterface.OnClickListener { dialog, id -> makeCall() })
+            dialogBuilder.setNegativeButton("Cancel", DialogInterface.OnClickListener { dialog, id -> dialog.dismiss() })
+            dialog = dialogBuilder.create()
+        }
+
+    }
+
+    // TODO:: right now, countdown will not cease if canceled. Be sure to fix.
+    private fun callPolice() {
+
+        val countDownThread: (AlertDialog) -> Thread = {
+            thread {
+                for (sec in 9 downTo 1) {
+                    Thread.sleep(1000)
+                    it.setMessage("Calling police in $sec ${if (sec>1) "seconds" else "second"}")
+                }
+                Thread.sleep(1000)
+                it.setMessage("Calling the police now")
+                Thread.sleep(500)
+                it.cancel()
+            }
+        }
+
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -200,9 +268,10 @@ class HomeActivity : AppCompatActivity(), OnMapReadyCallback {
         val MY_PERMISSIONS_REQUEST= 9002
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED ||
                 ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED ||
+                ActivityCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED ||
                 ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this@HomeActivity,
-                    arrayOf(Manifest.permission.READ_PHONE_STATE, Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.READ_CONTACTS),
+                    arrayOf(Manifest.permission.CALL_PHONE, Manifest.permission.READ_PHONE_STATE, Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.READ_CONTACTS),
                     MY_PERMISSIONS_REQUEST)
         }
     }

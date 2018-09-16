@@ -37,6 +37,12 @@ import java.nio.charset.Charset
 import org.json.*
 import java.io.*
 
+/*
+The MapsManager manages the map on the home screen and keeps track of the user's locations.
+It interacts with the database and will update a user's profile automatically so friends get
+live updates of their locations.
+ */
+
 class MapsManager(context: Context, private val mMap: GoogleMap, private val activity: Activity): SeekBar.OnSeekBarChangeListener {
 
     // Other Variables and Values

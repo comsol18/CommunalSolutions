@@ -17,6 +17,8 @@ import comcomsol.wixsite.communalsolutions1.communalsolutions.VirtualObjects.Con
 import kotlinx.android.synthetic.main.activity_contacts.*
 import java.util.*
 
+// The Contacts Activity is where all contacts on the phone are listed and the user may choose an emergency contact
+
 class ContactsActivity : AppCompatActivity(), ContactsAdapter.ContactListener {
     private val TAG = "ContactsActivity"
     private lateinit var recyclerView: RecyclerView

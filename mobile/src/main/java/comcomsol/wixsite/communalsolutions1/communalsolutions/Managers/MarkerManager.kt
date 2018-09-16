@@ -16,6 +16,10 @@ import java.io.InputStreamReader
 import java.net.URL
 import java.nio.charset.Charset
 
+/*
+TODO:: MarkerManager and MarkerAdder are unfinished. They process requests to the maps API and place markers on the map.
+ */
+
 class MarkerAdder(private val context: Context, private val mMap: GoogleMap, private val location: LatLng): AsyncTask<Void, Void, ArrayList<LocalPlace>>() {
     private val TAG = "MarkerAdder"
     private var jsonPlaces: JSONArray = JSONArray()

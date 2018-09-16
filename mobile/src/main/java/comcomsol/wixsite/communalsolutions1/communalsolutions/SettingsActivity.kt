@@ -20,6 +20,8 @@ import comcomsol.wixsite.communalsolutions1.communalsolutions.VirtualObjects.Pro
 import kotlinx.android.synthetic.main.activity_settings.*
 import kotlinx.android.synthetic.main.toolbar.*
 
+// The settings activity is where the user can edit their profile.
+
 class SettingsActivity : AppCompatActivity() {
     private val TAG = "SettingsActivity"
 

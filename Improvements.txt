@@ -1,0 +1,5 @@
+Fix bugs in AsyncTask
+Setup the Resources/Community Info/Events as a swiping tabbed activity
+The fragments should contain short previews of the information listed
+clicking on an event/place/resource/article should expand the listing and give more detailed info
+Add ability to call police with one tap and add popup confirmation

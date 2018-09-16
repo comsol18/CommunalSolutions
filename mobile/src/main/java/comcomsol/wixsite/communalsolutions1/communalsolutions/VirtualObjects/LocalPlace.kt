@@ -12,10 +12,15 @@ import java.io.InputStreamReader
 import java.net.URL
 import java.nio.charset.Charset
 
+// Map SearchTypes are pre-programmed types of places that can be searched for in the immediate area.
 enum class MapSearchTypes {
     Hospital, SelfDefenseCourse, Police, Clinic, EmergencyContact, Abstract
 }
 
+/*
+The following classes extend LocalPlace and are used to connect the locations to the people or places
+to be displayed on the map.
+ */
 class Hospital(jsonPlace: JSONObject, userLocation: LatLng): LocalPlace(jsonPlace, userLocation) {
     override var TAG: String = "Hospital"
     override var searchType: MapSearchTypes = MapSearchTypes.Hospital
