@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="default_web_client_id" translatable="false">1019793408847-jm13mallql3msf24c03s1gdahgu5cvmc.apps.googleusercontent.com</string>
+    <string name="firebase_database_url" translatable="false">https://communal-solutions.firebaseio.com</string>
+    <string name="gcm_defaultSenderId" translatable="false">1019793408847</string>
+    <string name="google_api_key" translatable="false">AIzaSyCg7RqXBc0NC2bFcuPyx2LQImYfEWNnCtQ</string>
+    <string name="google_app_id" translatable="false">1:1019793408847:android:4a3d9037d145a0ca</string>
+    <string name="google_crash_reporting_api_key" translatable="false">AIzaSyCg7RqXBc0NC2bFcuPyx2LQImYfEWNnCtQ</string>
+    <string name="google_storage_bucket" translatable="false">communal-solutions.appspot.com</string>
+    <string name="project_id" translatable="false">communal-solutions</string>
+</resources>

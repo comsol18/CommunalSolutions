@@ -1,0 +1,1 @@
+[{"outputType":{"type":"MERGED_MANIFESTS"},"apkInfo":{"type":"MAIN","splits":[],"versionCode":9,"versionName":"18.07.19","enabled":true,"outputFile":"mobile-debug.apk","fullName":"debug","baseName":"debug"},"path":"AndroidManifest.xml","properties":{"packageId":"comcomsol.wixsite.communalsolutions1.communalsolutions","split":"","minSdkVersion":"21"}}]
