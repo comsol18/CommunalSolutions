@@ -10,6 +10,8 @@ git clone https://github.com/ogparry1/CommunalSolutions.git
 ```
 The application is using Google's Firebase Database, so ask the administrator for access to the google console.  You will be required to add your digital fingerprint to the Firebase as can be seen in this [forum](https://stackoverflow.com/questions/39144629/how-to-add-sha-1-to-android-application).  You will also need to add your digital signature to the Google API Key on the Google Cloud Platform.
 
+All Android development should be done under the Android_master branch and Apple development likewise under the iOS_master branch.
+
 ### Prerequisites
 
 You will need a Google account.
