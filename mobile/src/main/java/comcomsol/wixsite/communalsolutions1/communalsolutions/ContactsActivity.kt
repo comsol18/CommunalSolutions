@@ -1,6 +1,5 @@
 package comcomsol.wixsite.communalsolutions1.communalsolutions
 
-import android.app.Activity
 import android.app.SearchManager
 import android.content.Context
 import android.content.Intent
@@ -8,19 +7,17 @@ import android.database.Cursor
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.ContactsContract
-import android.support.v4.app.NavUtils
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.SearchView
-import android.util.Log
 import android.view.Menu
-import android.view.MenuItem
-import android.widget.Toast
-import android.widget.Toolbar
 import comcomsol.wixsite.communalsolutions1.communalsolutions.Adapters.ContactsAdapter
 import comcomsol.wixsite.communalsolutions1.communalsolutions.HelperFiles.*
+import comcomsol.wixsite.communalsolutions1.communalsolutions.VirtualObjects.Contact
 import kotlinx.android.synthetic.main.activity_contacts.*
 import java.util.*
+
+// The Contacts Activity is where all contacts on the phone are listed and the user may choose an emergency contact
 
 class ContactsActivity : AppCompatActivity(), ContactsAdapter.ContactListener {
     private val TAG = "ContactsActivity"
@@ -41,10 +38,10 @@ class ContactsActivity : AppCompatActivity(), ContactsAdapter.ContactListener {
 
         while (cursor.moveToNext()) {
             contacts.add(
-                Contact(
-                    cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME)),
-                    cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER))
-                )
+                    Contact(
+                            cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME)),
+                            cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER))
+                    )
             )
         }
     }

@@ -1,7 +1,11 @@
-package comcomsol.wixsite.communalsolutions1.communalsolutions.HelperFiles
+package comcomsol.wixsite.communalsolutions1.communalsolutions.VirtualObjects
 
 import android.os.Parcel
 import android.os.Parcelable
+
+/*
+The Contact class describes a contact that the user can add to their ContactList
+ */
 
 class Contact(): Parcelable {
     var cName: String = "No Contact"

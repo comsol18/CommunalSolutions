@@ -3,6 +3,12 @@ package comcomsol.wixsite.communalsolutions1.communalsolutions.HelperFiles
 import android.app.Activity
 import android.support.v4.app.NavUtils
 import android.util.Log
+import java.io.IOException
+import java.io.Reader
+
+/*
+These methods are used for easy debugging purposes
+ */
 
 fun eLog(tag: String, msg: String) {
     Log.e(tag, msg)
@@ -35,6 +41,36 @@ fun formatObject(obj: String): String {
     result += "\n)"
     return result
 }
+
+fun timeMethod(TAG: String, methodName: String): () -> Long {
+    dLog(TAG, "Beginning $methodName")
+    val start = System.currentTimeMillis()
+    val stop: () -> Long = {
+        val end= System.currentTimeMillis()
+        dLog(TAG, "Finished $methodName in ${end-start} ms")
+        end- start
+    }
+    return stop
+}
+
+@Throws(IOException::class)
+fun readAll(rd: Reader): String {
+    val text = rd.readText()
+//    dLog("readText", text)
+//    Thread.sleep(10000)
+    return text
+}
+
+/*@Throws(IOException::class)
+fun readAll(rd: Reader): String {
+    val sb = StringBuilder()
+    var cp: Int = rd.read()
+    while (cp != -1) {
+        sb.append(cp.toChar())
+        cp = rd.read()
+    }
+    return sb.toString()
+}*/
 
 fun navigateUp(activity: Activity) {
     NavUtils.navigateUpTo(activity, NavUtils.getParentActivityIntent(activity))

@@ -1,17 +1,12 @@
 package comcomsol.wixsite.communalsolutions1.communalsolutions
 
 import android.content.pm.PackageManager
-import android.location.*
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.Manifest
 import android.content.Context
-import android.content.Context.*
 import android.content.Intent
-import android.net.Uri
 import android.support.v4.app.ActivityCompat
-import android.support.v4.content.ContextCompat
-import android.support.v7.widget.Toolbar
 import android.telephony.TelephonyManager
 import android.util.Log
 import android.view.MenuItem
@@ -19,9 +14,13 @@ import android.view.View
 import android.widget.*
 import comcomsol.wixsite.communalsolutions1.communalsolutions.HelperFiles.*
 import com.google.firebase.database.*
-import comcomsol.wixsite.communalsolutions1.communalsolutions.Adapters.ContactsAdapter
 import comcomsol.wixsite.communalsolutions1.communalsolutions.Managers.*
+import comcomsol.wixsite.communalsolutions1.communalsolutions.VirtualObjects.Contact
+import comcomsol.wixsite.communalsolutions1.communalsolutions.VirtualObjects.Profile
 import kotlinx.android.synthetic.main.activity_settings.*
+import kotlinx.android.synthetic.main.toolbar.*
+
+// The settings activity is where the user can edit their profile.
 
 class SettingsActivity : AppCompatActivity() {
     private val TAG = "SettingsActivity"
@@ -112,28 +111,9 @@ class SettingsActivity : AppCompatActivity() {
     }
 
     private fun configureToolbar() {
-        val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
     }
-
-/*
-    private val locationListener: LocationListener = object : LocationListener {
-        override fun onLocationChanged(location: Location) {
-            */
-/*
-            val lat: Double = Math.round(location.latitude*1000.0)/1000.0
-            val long: Double = Math.round(location.longitude*1000.0)/1000.0
-            val userLocation = UserLocation(lat, long, dbValues.uuid)
-            *//*
-
-            dbReferences.locReference.setValue(location)
-        }
-        override fun onStatusChanged(provider: String, status: Int, extras: Bundle) {}
-        override fun onProviderEnabled(provider: String) {}
-        override fun onProviderDisabled(provider: String) {}
-    }
-*/
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -148,26 +128,6 @@ class SettingsActivity : AppCompatActivity() {
         spinner = findViewById(R.id.spinner) as Spinner
         configureToolbar()
         toolbarTextView!!.visibility = View.VISIBLE
-
-/*        locationManager = getSystemService(LOCATION_SERVICE) as LocationManager?
-        val MY_PERMISSIONS_REQUEST = 9002
-
-        try {
-            // Request location updates
-            if (ContextCompat.checkSelfPermission(this@SettingsActivity, Manifest.permission.ACCESS_FINE_LOCATION)
-                    != PackageManager.PERMISSION_GRANTED) {
-
-                    ActivityCompat.requestPermissions(this@SettingsActivity,
-                            arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
-                            MY_PERMISSIONS_REQUEST)
-            } else {
-                // Permission has already been granted
-                locationManager?.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0L, 0f, locationListener)
-            }
-        } catch(ex: SecurityException) {
-            Log.e("Exception", ex.toString())
-            Log.e("myTag", "Security Exception, no location available")
-        }*/
 
         setOnClickListeners(arrayListOf(contact1, contact2, contact3, contact4, contact5, contact6, saveSettings))
     }

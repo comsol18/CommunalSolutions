@@ -49,8 +49,12 @@
     <string name="action_search">Search</string>
     <string name="search_hint">Type name...</string>
     <string name="search_title">Contacts</string>
-    <string name="title_activity_community_info">CommunityInfoActivity</string>
-    <string name="tab_text_1">Tab 1</string>
-    <string name="tab_text_2">Tab 2</string>
-    <string name="tab_text_3">Tab 3</string>
+    <string name="emergency">Emergency Contact Location</string>
+    <string name="hospital">Hospital</string>
+    <string name="police">Police stations</string>
+    <string name="defense">Self Defense class</string>
+    <string name="title_activity_bottom_nav">BottomNav</string>
+    <string name="title_profile">Profile</string>
+    <string name="title_emergency">Call 911</string>
+    <string name="title_center">Center Map</string>
 </resources>

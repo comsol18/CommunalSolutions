@@ -11,26 +11,51 @@ import android.support.v13.app.ActivityCompat
 import android.support.v4.content.ContextCompat
 import android.util.Log
 import com.google.android.gms.maps.GoogleMap
-import comcomsol.wixsite.communalsolutions1.communalsolutions.HelperFiles.DBReferences
-import comcomsol.wixsite.communalsolutions1.communalsolutions.HelperFiles.DBValues
+import comcomsol.wixsite.communalsolutions1.communalsolutions.HelperFiles.*
 import android.app.Activity
 import android.content.Context
-import android.os.Parcelable
-import android.widget.Toast
+import android.widget.SeekBar
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.MarkerOptions
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
-import comcomsol.wixsite.communalsolutions1.communalsolutions.HelperFiles.UserLocation
-import comcomsol.wixsite.communalsolutions1.communalsolutions.R.drawable.profile
+import kotlinx.android.synthetic.main.activity_home.*
+import android.net.Uri
+import android.os.AsyncTask
+import android.os.StrictMode
+import android.util.JsonReader
+import android.widget.Toast
+import com.google.android.gms.maps.model.MarkerOptions
+import comcomsol.wixsite.communalsolutions1.communalsolutions.R.id.*
+import comcomsol.wixsite.communalsolutions1.communalsolutions.VirtualObjects.*
+import kotlinx.coroutines.experimental.CommonPool
+import kotlinx.coroutines.experimental.launch
+import org.jetbrains.anko.coroutines.experimental.bg
+import java.net.URL
+import java.nio.charset.Charset
+import org.json.*
+import java.io.*
 
-class MapsManager(private val context: Context, private val mMap: GoogleMap, private val activity: Activity) {
+/*
+The MapsManager manages the map on the home screen and keeps track of the user's locations.
+It interacts with the database and will update a user's profile automatically so friends get
+live updates of their locations.
+ */
+
+class MapsManager(context: Context, private val mMap: GoogleMap, private val activity: Activity): SeekBar.OnSeekBarChangeListener {
+
+    // Other Variables and Values
+    private val TAG = "MapsManager"
+    var markerAdder: MarkerAdder? = null
+
     // Database
-//    private val dbValues = DBValues()
     private val dbReferences = DBReferences()
     private var location: UserLocation = UserLocation()
+    private val radiusSeekBar = activity.radiusSeekBar
+    private val listingsSeekBar = activity.numListingsSeekbar
+    var searchRadius = 4
+    var numListings = 5
 
     // Managers
     private val locationManager: LocationManager?
@@ -40,6 +65,7 @@ class MapsManager(private val context: Context, private val mMap: GoogleMap, pri
     private val locationListener: LocationListener = object : LocationListener {
         override fun onLocationChanged(location: Location) {
             dbReferences.locReference.setValue(UserLocation(location))
+            markerAdder = MarkerAdder(context, mMap, LatLng(location.latitude, location.longitude))
         }
         override fun onStatusChanged(provider: String, status: Int, extras: Bundle) {}
         override fun onProviderEnabled(provider: String) {}
@@ -52,7 +78,6 @@ class MapsManager(private val context: Context, private val mMap: GoogleMap, pri
             if (dataSnapshot.exists()) {
                 location = dataSnapshot.getValue(UserLocation::class.java)!!
             }
-            moveMyLocation()
             if (!centered) {
                 centerCamera(getLatLng(), 15f)
                 centered = true
@@ -63,12 +88,67 @@ class MapsManager(private val context: Context, private val mMap: GoogleMap, pri
         }
     }
 
+    // Public functions
+    fun clearMap() { mMap.clear() }
+
+    fun centerCamera(location: LatLng, zoom: Float?) {
+        if (zoom == null) {
+            mMap.moveCamera(CameraUpdateFactory.newLatLng(location))
+        } else {
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, zoom))
+        }
+    }
+
+    fun getLatLng(): LatLng { return LatLng(location.latitude, location.longitude) }
+
+    // private functions
+    private fun configSeekBars() {
+        radiusSeekBar.progress = searchRadius
+        radiusSeekBar.max = 19
+        radiusSeekBar.setOnSeekBarChangeListener(this)
+
+        listingsSeekBar.progress = numListings
+        listingsSeekBar.max = 15
+        listingsSeekBar.setOnSeekBarChangeListener(this)
+    }
+
+    // Overridden functions
+    // SeekBar.OnSeekBarChangeListener interface functions
+    override fun onStartTrackingTouch(seekBar: SeekBar?) {}
+    override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+        when (seekBar!!) {
+            radiusSeekBar -> {
+                searchRadius = progress + 1
+                activity.radius.text = "$searchRadius miles"
+            }
+            listingsSeekBar -> {
+                numListings = progress + 5
+                activity.totalNumListings.text = "$numListings listings"
+            }
+        }
+    }
+
+    override fun onStopTrackingTouch(seekBar: SeekBar?) {
+        if (markerAdder != null) {
+            when (seekBar!!) {
+                radiusSeekBar -> markerAdder!!.miles = searchRadius
+                listingsSeekBar -> markerAdder!!.numListings = numListings
+            }
+//            markerAdder!!.buildQuery()
+        }
+    }
+
+    // Initialization
     init {
+        val policy: StrictMode.ThreadPolicy = StrictMode.ThreadPolicy.Builder().permitAll().build()
+        StrictMode.setThreadPolicy(policy)
+
+        configSeekBars()
         dbReferences.locReference.addValueEventListener(cameraLocationListener)
-
         locationManager = activity.getSystemService(LOCATION_SERVICE) as LocationManager?
-        val MY_PERMISSIONS_REQUEST = 9002
+        mMap.isMyLocationEnabled = true
 
+        val MY_PERMISSIONS_REQUEST = 9002
         try {
             // Request location updates
             if (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION)
@@ -86,21 +166,4 @@ class MapsManager(private val context: Context, private val mMap: GoogleMap, pri
             Log.e("myTag", "Security Exception, no location available")
         }
     }
-
-    fun moveMyLocation() {
-        mMap.clear()
-        mMap.addMarker(MarkerOptions().position(getLatLng()).title("My Location"))
-    }
-
-    fun centerCamera(location: LatLng, zoom: Float?) {
-        if (zoom == null) {
-            mMap.moveCamera(CameraUpdateFactory.newLatLng(location))
-        } else {
-            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, zoom))
-        }
-    }
-
-    fun centerMe(location: LatLng) { centerCamera(location, null) }
-
-    fun getLatLng(): LatLng { return LatLng(location.latitude, location.longitude) }
 }

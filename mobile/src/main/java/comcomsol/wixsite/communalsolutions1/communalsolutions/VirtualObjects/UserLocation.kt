@@ -1,4 +1,4 @@
-package comcomsol.wixsite.communalsolutions1.communalsolutions.HelperFiles
+package comcomsol.wixsite.communalsolutions1.communalsolutions.VirtualObjects
 
 import android.location.Location
 
